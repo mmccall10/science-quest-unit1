@@ -16,10 +16,12 @@
   <meta name="description" content="Unit 1 Science Quest — What is Science?">
   <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Science%20Quest%22%2C%22short_name%22%3A%22Science%20Quest%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23E8F6F4%22%2C%22theme_color%22%3A%22%230B7A75%22%7D">
   <title>Science Quest</title>
+  <!-- Science Quest Unit 1 v3 2026-08-20 -->
   <style>
     :root {
       --teal: #0B7A75;
       --teal-dark: #06514E;
+      --teal-mid: #0E9A7A;
       --teal-soft: #D4F1EE;
       --gold: #F4B400;
       --gold-deep: #C48A00;
@@ -33,6 +35,7 @@
       --try: #C05621;
       --try-bg: #FFE8D6;
       --line: #B7D4D0;
+      --shelf: #C4A574;
       --shadow: 0 8px 24px rgba(11, 122, 117, 0.14);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
@@ -51,10 +54,17 @@
     }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background:
+      background-color: var(--sky);
+      background-image:
+        radial-gradient(circle at 18% 22%, rgba(255,255,255,0.55) 0 10px, transparent 11px),
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,0.4) 0 8px, transparent 9px),
+        radial-gradient(circle at 88% 70%, rgba(19,163,156,0.12) 0 18px, transparent 19px),
+        linear-gradient(rgba(11,122,117,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(11,122,117,0.045) 1px, transparent 1px),
         radial-gradient(1200px 500px at 10% -10%, #FFF3C4 0%, transparent 55%),
         radial-gradient(900px 420px at 110% 0%, #B8EFE8 0%, transparent 50%),
         linear-gradient(180deg, var(--sky) 0%, var(--cream) 100%);
+      background-size: auto, auto, auto, 28px 28px, 28px 28px, auto, auto, auto;
       color: var(--ink);
       min-height: 100dvh;
       font-size: 17px;
@@ -79,12 +89,45 @@
     }
 
     h1, h2, h3 { margin: 0; line-height: 1.2; }
+    p { margin: 0; }
+
+    svg { display: block; }
 
     .wrap {
       width: 100%;
       max-width: 430px;
       margin: 0 auto;
-      padding: 16px 16px 40px;
+      padding: 16px 16px 48px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .lab-bubbles {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .lab-bubbles i {
+      position: absolute;
+      bottom: -40px;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(11,122,117,0.22);
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      animation: rise 14s linear infinite;
+    }
+    .lab-bubbles i:nth-child(1) { left: 8%; animation-delay: 0s; width: 10px; height: 10px; }
+    .lab-bubbles i:nth-child(2) { left: 22%; animation-delay: 3s; width: 16px; height: 16px; }
+    .lab-bubbles i:nth-child(3) { left: 48%; animation-delay: 6s; }
+    .lab-bubbles i:nth-child(4) { left: 70%; animation-delay: 1.5s; width: 12px; height: 12px; }
+    .lab-bubbles i:nth-child(5) { left: 86%; animation-delay: 8s; width: 18px; height: 18px; }
+    @keyframes rise {
+      0% { transform: translateY(0) scale(1); opacity: 0.55; }
+      80% { opacity: 0.25; }
+      100% { transform: translateY(-110vh) scale(1.15); opacity: 0; }
     }
 
     .rotate-gate {
@@ -100,30 +143,46 @@
       font-size: 22px;
       font-weight: 800;
     }
-    .rotate-gate span { font-size: 48px; display: block; margin-bottom: 12px; }
+    .rotate-gate .phone-ico { width: 56px; height: 56px; margin: 0 auto 12px; }
     @media screen and (orientation: landscape) and (max-height: 520px) {
       .rotate-gate { display: grid; }
-      .wrap { visibility: hidden; }
+      .wrap, .lab-bubbles, #confetti { visibility: hidden; }
     }
 
     .screen { display: none; }
     .screen.active { display: block; }
 
-    .brand {
-      text-align: center;
-      padding: 12px 8px 4px;
+    .home-top {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 2px;
     }
-    .beaker {
-      width: 72px;
-      height: 72px;
-      margin: 0 auto 10px;
-      border-radius: 20px;
-      background: linear-gradient(160deg, #13A39C, #0B7A75);
-      color: #fff;
+    .mute-btn {
+      min-height: 48px;
+      min-width: 48px;
+      border: 2px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      font-size: 36px;
-      box-shadow: var(--shadow);
+      cursor: pointer;
+      padding: 8px;
+    }
+    .mute-btn svg { width: 26px; height: 26px; }
+    .mute-btn.is-muted { background: var(--try-bg); border-color: #E0B090; }
+
+    .brand { text-align: center; padding: 4px 8px 2px; }
+    .mascot-wrap {
+      width: 108px;
+      height: 108px;
+      margin: 0 auto 8px;
+      position: relative;
+    }
+    .mascot-wrap svg { width: 108px; height: 108px; }
+    .mascot-wrap.bob { animation: bob 2.8s ease-in-out infinite; }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
     .brand h1 {
       font-size: 32px;
@@ -148,50 +207,93 @@
       font-weight: 700;
     }
 
-    .menu {
-      display: grid;
-      gap: 12px;
-      margin-top: 22px;
+    .shelf-row {
+      height: 18px;
+      margin: 16px 4px 10px;
+      background:
+        linear-gradient(#8B6A3A, #8B6A3A) center 6px / 100% 3px no-repeat,
+        repeating-linear-gradient(90deg, #C4A574 0 22px, #B38E5A 22px 24px);
+      border-radius: 4px 4px 2px 2px;
+      box-shadow: 0 6px 0 rgba(101,74,36,0.18);
+      position: relative;
     }
-    .mode-btn {
+    .shelf-row:before, .shelf-row:after {
+      content: "";
+      position: absolute;
+      bottom: 8px;
+      width: 16px;
+      height: 22px;
+      border-radius: 3px 3px 0 0;
+      background: linear-gradient(180deg, #13A39C, #0B7A75);
+    }
+    .shelf-row:before { left: 18%; }
+    .shelf-row:after { right: 22%; background: linear-gradient(180deg, #F4B400, #C48A00); }
+
+    .stations { display: grid; gap: 12px; }
+    .station {
       min-height: 64px;
       width: 100%;
       border: 0;
       border-radius: 18px;
-      padding: 14px 16px;
+      padding: 14px 14px;
       background: var(--card);
       color: var(--ink);
       box-shadow: var(--shadow);
-      display: flex;
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       text-align: left;
       cursor: pointer;
       font-size: 17px;
+      position: relative;
     }
-    .mode-btn:focus-visible,
-    .btn:focus-visible {
+    .station:focus-visible,
+    .btn:focus-visible,
+    .mute-btn:focus-visible,
+    .choice:focus-visible,
+    .rule:focus-visible,
+    .step:focus-visible,
+    .mem-card:focus-visible,
+    .flip-card:focus-visible {
       outline: 3px solid var(--gold);
       outline-offset: 3px;
     }
-    .mode-btn .icon {
-      width: 48px;
-      height: 48px;
-      min-width: 48px;
-      border-radius: 14px;
+    .station .ico {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 16px;
       display: grid;
       place-items: center;
-      font-size: 26px;
       background: var(--teal-soft);
+      padding: 6px;
     }
-    .mode-btn strong { display: block; font-size: 19px; }
-    .mode-btn span { display: block; color: var(--ink-soft); font-size: 16px; margin-top: 2px; }
-    .mode-btn.playall {
+    .station .ico svg { width: 40px; height: 40px; }
+    .station strong { display: block; font-size: 18px; }
+    .station .why { display: block; color: var(--ink-soft); font-size: 16px; margin-top: 2px; font-weight: 600; }
+    .station .check {
+      width: 28px;
+      height: 28px;
+      opacity: 0;
+    }
+    .station.did .check { opacity: 1; }
+    .station.playall {
       background: linear-gradient(135deg, #0B7A75, #0E9A7A);
       color: #fff;
+      grid-template-columns: 56px 1fr;
     }
-    .mode-btn.playall span { color: #E8FFF8; }
-    .mode-btn.playall .icon { background: rgba(255,255,255,0.18); }
+    .station.playall .why { color: #E8FFF8; }
+    .station.playall .ico { background: rgba(255,255,255,0.18); }
+
+    .room-label {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin: 4px 2px 0;
+    }
 
     .topbar {
       display: flex;
@@ -201,11 +303,13 @@
     }
     .topbar h2 {
       flex: 1;
-      font-size: 22px;
+      font-size: 21px;
       color: var(--teal-dark);
     }
+    .topbar .mute-btn { min-width: 48px; min-height: 48px; }
+
     .progress {
-      margin: 0 0 14px;
+      margin: 0 0 8px;
       font-size: 16px;
       font-weight: 700;
       color: var(--teal);
@@ -224,7 +328,27 @@
       width: 0;
       background: linear-gradient(90deg, #13A39C, #F4B400);
       border-radius: 999px;
-      transition: width 0.25s ease;
+      transition: width 0.28s ease;
+    }
+
+    .streak {
+      display: none;
+      margin: -16px 0 18px;
+      text-align: center;
+    }
+    .streak.show {
+      display: inline-block;
+      width: 100%;
+    }
+    .streak b {
+      display: inline-block;
+      background: #FFF3C4;
+      color: #7A5600;
+      border: 2px solid var(--gold);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 16px;
+      min-height: 36px;
     }
 
     .btn {
@@ -265,7 +389,7 @@
 
     .card-stage { perspective: 1000px; }
     .flip-card {
-      min-height: 240px;
+      min-height: 280px;
       position: relative;
       cursor: pointer;
       border: 0;
@@ -276,8 +400,8 @@
     .flip-inner {
       position: relative;
       width: 100%;
-      min-height: 240px;
-      transition: transform 0.45s;
+      min-height: 280px;
+      transition: transform 0.35s ease;
       transform-style: preserve-3d;
     }
     .flip-card.is-flipped .flip-inner { transform: rotateY(180deg); }
@@ -293,7 +417,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 24px 18px;
+      padding: 20px 16px;
       text-align: center;
       border: 3px solid var(--teal);
     }
@@ -302,23 +426,30 @@
       border-color: var(--gold);
       background: #FFFBEA;
     }
+    .face .art {
+      width: 96px;
+      height: 96px;
+      margin-bottom: 10px;
+    }
+    .face .art svg { width: 96px; height: 96px; }
     .face .tag {
       font-size: 16px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--teal);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
     .face.back .tag { color: var(--gold-deep); }
-    .face .term { font-size: 34px; font-weight: 800; color: var(--teal-dark); }
-    .face .def { font-size: 22px; font-weight: 700; color: var(--ink); }
+    .face .term { font-size: 30px; font-weight: 800; color: var(--teal-dark); }
+    .face .def { font-size: 20px; font-weight: 700; color: var(--ink); }
 
     .hint {
       text-align: center;
       color: var(--ink-soft);
       font-size: 16px;
       margin: 10px 0 0;
+      font-weight: 600;
     }
 
     .prompt-box {
@@ -338,10 +469,16 @@
     }
     .prompt-box p {
       margin: 8px 0 0;
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 800;
       color: var(--ink);
     }
+    .prompt-box .scene-art {
+      width: 100%;
+      height: 110px;
+      margin-bottom: 8px;
+    }
+    .prompt-box .scene-art svg { width: 100%; height: 110px; }
 
     .choices { display: grid; gap: 10px; }
     .choice {
@@ -356,18 +493,23 @@
       font-weight: 700;
       color: var(--ink);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .choice.correct {
-      background: var(--ok-bg);
-      border-color: var(--ok);
-      color: #0E4A24;
+    .choice .mini {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      border-radius: 10px;
+      background: var(--teal-soft);
+      padding: 4px;
     }
-    .choice.wrong {
-      background: var(--try-bg);
-      border-color: var(--try);
-      color: #6A2E10;
-    }
+    .choice .mini svg { width: 28px; height: 28px; }
+    .choice.correct { background: var(--ok-bg); border-color: var(--ok); color: #0E4A24; }
+    .choice.wrong { background: var(--try-bg); border-color: var(--try); color: #6A2E10; }
     .choice:disabled { cursor: default; }
+    .choice.wiggle, .rule.wiggle, .step.wiggle, .mem-card.wiggle { animation: wiggle 0.35s ease; }
 
     .feedback {
       margin-top: 12px;
@@ -382,55 +524,93 @@
 
     .safety-grid { display: grid; gap: 10px; }
     .rule {
-      min-height: 52px;
+      min-height: 56px;
       width: 100%;
       text-align: left;
       border: 2px solid var(--line);
       background: #fff;
       border-radius: 16px;
-      padding: 12px 14px;
-      font-size: 17px;
+      padding: 10px 12px;
+      font-size: 16px;
       font-weight: 700;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .rule.picked-good {
-      background: var(--ok-bg);
-      border-color: var(--ok);
-      color: #0E4A24;
+    .rule .mini {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 12px;
+      background: var(--teal-soft);
+      padding: 4px;
     }
-    .rule.picked-bad {
-      background: var(--try-bg);
-      border-color: var(--try);
-      color: #6A2E10;
-    }
-    .rule.wiggle { animation: wiggle 0.4s ease; }
-    .step.wiggle { animation: wiggle 0.4s ease; }
+    .rule .mini svg { width: 32px; height: 32px; }
+    .rule.picked-good { background: var(--ok-bg); border-color: var(--ok); color: #0E4A24; }
+    .rule.picked-bad { background: var(--try-bg); border-color: var(--try); color: #6A2E10; }
 
-    @keyframes wiggle {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-8px); }
-      40% { transform: translateX(8px); }
-      60% { transform: translateX(-6px); }
-      80% { transform: translateX(6px); }
-    }
-
-    .chain {
-      min-height: 72px;
+    .poster-list { display: grid; gap: 10px; margin-top: 10px; }
+    .poster {
+      display: grid;
+      grid-template-columns: 52px 1fr;
+      gap: 12px;
+      align-items: center;
       background: #fff;
-      border: 3px dashed var(--line);
+      border: 2px solid var(--teal);
       border-radius: 16px;
-      padding: 10px;
-      margin-bottom: 14px;
+      padding: 10px 12px;
+      min-height: 64px;
     }
-    .chain ol {
-      margin: 0;
-      padding-left: 22px;
+    .poster .mini {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--teal-soft);
+      padding: 6px;
     }
-    .chain li {
+    .poster .mini svg { width: 40px; height: 40px; }
+    .poster strong { font-size: 16px; color: var(--teal-dark); }
+
+    .stairs { display: grid; gap: 0; margin-bottom: 16px; }
+    .stair {
+      position: relative;
+      background: #fff;
+      border: 2px dashed var(--line);
+      border-radius: 14px;
+      min-height: 52px;
+      padding: 10px 14px 10px 52px;
       font-weight: 800;
-      color: var(--teal-dark);
-      margin: 4px 0;
+      color: #8AA19E;
+      display: flex;
+      align-items: center;
     }
+    .stair .num {
+      position: absolute;
+      left: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #E4EFED;
+      color: #5E7471;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+    }
+    .stair.lit {
+      border-style: solid;
+      border-color: var(--teal);
+      background: var(--ok-bg);
+      color: var(--teal-dark);
+    }
+    .stair.lit .num { background: var(--teal); color: #fff; }
+    .stair-arrow {
+      height: 18px;
+      display: grid;
+      place-items: center;
+      color: var(--teal);
+    }
+    .stair-arrow svg { width: 20px; height: 16px; }
     .steps { display: grid; gap: 10px; }
     .step {
       min-height: 52px;
@@ -445,9 +625,71 @@
       cursor: pointer;
     }
     .step.used {
-      opacity: 0.4;
+      opacity: 0.38;
       background: var(--teal-soft);
     }
+
+    .mem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .mem-card {
+      min-height: 112px;
+      border: 2px solid var(--teal);
+      background: linear-gradient(160deg, #13A39C, #0B7A75);
+      border-radius: 16px;
+      padding: 10px;
+      cursor: pointer;
+      color: #fff;
+      font-weight: 800;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 6px;
+      position: relative;
+    }
+    .mem-card .back-mark {
+      width: 36px;
+      height: 36px;
+    }
+    .mem-card .back-mark svg { width: 36px; height: 36px; }
+    .mem-card.is-up, .mem-card.is-match {
+      background: #fff;
+      color: var(--ink);
+    }
+    .mem-card.is-match {
+      border-color: var(--ok);
+      background: var(--ok-bg);
+      color: #0E4A24;
+    }
+    .mem-card .mem-ico {
+      width: 32px;
+      height: 32px;
+    }
+    .mem-card .mem-ico svg { width: 32px; height: 32px; }
+    .mem-card .mem-def {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .mem-card.is-up .back-mark, .mem-card.is-match .back-mark { display: none; }
+    .mem-card:not(.is-up):not(.is-match) .mem-face { display: none; }
+
+    .step-badge {
+      display: none;
+      margin-top: 12px;
+      background: var(--teal);
+      color: #fff;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .step-badge.show { display: block; }
 
     .done-box {
       background: #fff;
@@ -459,12 +701,32 @@
     .done-box h3 { color: var(--teal-dark); font-size: 24px; }
     .done-box ul, .done-box ol { margin: 10px 0 0; padding-left: 22px; }
     .done-box li { margin: 6px 0; font-weight: 700; }
+    .done-box .parent {
+      margin-top: 14px;
+      padding: 12px;
+      background: #FFF8E8;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #5A4300;
+      border: 2px dashed var(--gold);
+    }
     .stars {
-      font-size: 36px;
+      font-size: 34px;
       letter-spacing: 4px;
       text-align: center;
-      margin: 8px 0 12px;
+      margin: 10px 0 12px;
     }
+
+    #confetti {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 80;
+    }
+
     .sr-only {
       position: absolute;
       width: 1px;
@@ -475,60 +737,77 @@
       clip: rect(0,0,0,0);
       border: 0;
     }
+
+    @keyframes wiggle {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    @keyframes popin {
+      0% { transform: scale(0.92); opacity: 0.4; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .pop { animation: popin 0.28s ease; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .mascot-wrap.bob { animation: none; }
+      .lab-bubbles { display: none; }
+      .flip-inner { transition: none; }
+    }
   </style>
 </head>
 <body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="lab-bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
   <div class="rotate-gate" id="rotateGate" aria-hidden="true">
-    <div><span>📱</span>Turn the phone upright</div>
+    <div>
+      <div class="phone-ico">
+        <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="18" y="8" width="28" height="48" rx="6" fill="#fff"/><rect x="22" y="14" width="20" height="32" fill="#0B7A75"/><circle cx="32" cy="50" r="2.5" fill="#0B7A75"/></svg>
+      </div>
+      Turn the phone upright
+    </div>
   </div>
   <div class="wrap">
     <section id="home" class="screen active" aria-label="Home">
+      <div class="home-top">
+        <button class="mute-btn" type="button" id="muteHome" aria-label="Mute sounds"></button>
+      </div>
       <div class="brand">
-        <div class="beaker" aria-hidden="true">🔬</div>
+        <div class="mascot-wrap bob" id="mascot" aria-hidden="true"></div>
         <h1>Science Quest</h1>
         <p class="sub">Unit 1 · What is Science?</p>
         <p class="test-note">Test Friday, August 21, 2026</p>
       </div>
-      <div class="menu">
-        <button class="mode-btn playall" type="button" onclick="startPlayAll()">
-          <span class="icon" aria-hidden="true">⭐</span>
-          <span><strong>Play all</strong><span>Vocab, safety, then method</span></span>
-        </button>
-        <button class="mode-btn" type="button" onclick="startFlashcards()">
-          <span class="icon" aria-hidden="true">🃏</span>
-          <span><strong>Flashcards</strong><span>Tap to flip term and definition</span></span>
-        </button>
-        <button class="mode-btn" type="button" onclick="startVocab()">
-          <span class="icon" aria-hidden="true">🧠</span>
-          <span><strong>Vocab quiz</strong><span>Pick the matching word or meaning</span></span>
-        </button>
-        <button class="mode-btn" type="button" onclick="startSafety()">
-          <span class="icon" aria-hidden="true">🧪</span>
-          <span><strong>Lab safety</strong><span>Tap 4 real lab rules</span></span>
-        </button>
-        <button class="mode-btn" type="button" onclick="startMethod()">
-          <span class="icon" aria-hidden="true">🔗</span>
-          <span><strong>Method mix-up</strong><span>Put the 6 steps in order</span></span>
-        </button>
-      </div>
+      <div class="shelf-row" aria-hidden="true"></div>
+      <div class="stations" id="homeStations"></div>
     </section>
 
     <section id="flash" class="screen" aria-label="Flashcards">
       <div class="topbar">
-        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
         <h2>Flashcards</h2>
-        <button class="btn gold" type="button" id="speakBtn" onclick="speakVisible()" aria-label="Read the card out loud">🔊</button>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
+        <button class="btn gold" type="button" id="speakBtn" aria-label="Read the card out loud"></button>
       </div>
       <p class="progress" id="flashProgress">Card 1 of 7</p>
       <div class="bar" aria-hidden="true"><i id="flashBar"></i></div>
       <div class="card-stage">
-        <button class="flip-card" id="flipCard" type="button" onclick="flipCard()" aria-label="Flip flashcard">
+        <button class="flip-card" id="flipCard" type="button" aria-label="Flip flashcard">
           <div class="flip-inner">
             <div class="face front">
+              <div class="art" id="flashArtFront"></div>
               <div class="tag">Term</div>
               <div class="term" id="flashTerm"></div>
             </div>
             <div class="face back">
+              <div class="art" id="flashArtBack"></div>
               <div class="tag">Definition</div>
               <div class="def" id="flashDef"></div>
             </div>
@@ -537,18 +816,20 @@
       </div>
       <p class="hint">Tap the card to flip. Use the speaker to hear it.</p>
       <div class="btn-row">
-        <button class="btn" type="button" onclick="flashNav(-1)" aria-label="Previous card">◀ Back</button>
-        <button class="btn primary" type="button" onclick="flashNav(1)" aria-label="Next card">Next ▶</button>
+        <button class="btn" type="button" id="flashBack" aria-label="Previous card">Back</button>
+        <button class="btn primary" type="button" id="flashNext" aria-label="Next card">Next</button>
       </div>
     </section>
 
     <section id="vocab" class="screen" aria-label="Vocab quiz">
       <div class="topbar">
-        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
         <h2>Vocab quiz</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
       </div>
       <p class="progress" id="vocabProgress">Question 1 of 7</p>
       <div class="bar" aria-hidden="true"><i id="vocabBar"></i></div>
+      <div class="streak" id="vocabStreak"><b>3 in a row!</b></div>
       <div id="vocabPlay">
         <div class="prompt-box">
           <div class="kind" id="vocabKind"></div>
@@ -557,23 +838,43 @@
         <div class="choices" id="vocabChoices"></div>
         <div class="feedback" id="vocabFeedback" role="status"></div>
         <div class="btn-row" id="vocabNextRow" style="display:none">
-          <button class="btn primary" type="button" onclick="nextVocab()">Next</button>
+          <button class="btn primary" type="button" id="vocabNextBtn">Next</button>
         </div>
       </div>
       <div id="vocabDone" class="done-box" hidden>
         <h3 id="vocabDoneTitle">Nice work!</h3>
         <p id="vocabDoneText"></p>
         <div class="btn-row">
-          <button class="btn gold" type="button" id="vocabRetryBtn" onclick="retryMissedVocab()">Retry missed</button>
-          <button class="btn primary" type="button" onclick="finishVocab()">Done</button>
+          <button class="btn gold" type="button" id="vocabRetryBtn">Retry missed</button>
+          <button class="btn primary" type="button" id="vocabDoneBtn">Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="memory" class="screen" aria-label="Memory match">
+      <div class="topbar">
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
+        <h2>Memory match</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
+      </div>
+      <p class="progress" id="memProgress">Pairs 0 of 7</p>
+      <div class="bar" aria-hidden="true"><i id="memBar"></i></div>
+      <p class="hint" id="memHint">Flip two cards. Match each word to its meaning.</p>
+      <div class="mem-grid" id="memGrid"></div>
+      <div id="memDone" class="done-box" hidden style="margin-top:16px">
+        <h3>All pairs matched!</h3>
+        <p>You paired every word with its exact definition.</p>
+        <div class="btn-row">
+          <button class="btn primary" type="button" id="memDoneBtn">Done</button>
         </div>
       </div>
     </section>
 
     <section id="safety" class="screen" aria-label="Lab safety">
       <div class="topbar">
-        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
         <h2>Lab safety</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
       </div>
       <p class="progress" id="safetyProgress">Find 4 real rules · 0 / 4</p>
       <div class="bar" aria-hidden="true"><i id="safetyBar"></i></div>
@@ -582,83 +883,113 @@
       <div class="feedback" id="safetyFeedback" role="status"></div>
       <div id="safetyDone" class="done-box" hidden style="margin-top:14px">
         <h3 id="safetyDoneTitle">You found 4 real rules!</h3>
-        <p>Memorize all 9 for the test. You only need to name 4, but knowing all of them is extra cool.</p>
-        <ol id="safetyAll"></ol>
+        <p>Poster review — memorize all 9. You only need to name 4 on the test.</p>
+        <div class="poster-list" id="safetyPosters"></div>
         <div class="btn-row">
-          <button class="btn primary" type="button" onclick="finishSafety()">Done</button>
+          <button class="btn primary" type="button" id="safetyDoneBtn">Done</button>
         </div>
       </div>
     </section>
 
     <section id="method" class="screen" aria-label="Method mix-up">
       <div class="topbar">
-        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
         <h2>Method mix-up</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
       </div>
       <p class="progress" id="methodProgress">Step 0 of 6</p>
       <div class="bar" aria-hidden="true"><i id="methodBar"></i></div>
-      <p class="hint">Tap the steps in the right order to build the chain.</p>
-      <div class="chain" id="methodChain" aria-live="polite">
-        <ol id="methodList"></ol>
-      </div>
+      <p class="hint" id="methodHint">Tap the next step to light the staircase.</p>
+      <div class="stairs" id="methodStairs"></div>
       <div class="steps" id="methodSteps"></div>
       <div id="methodDone" class="done-box" hidden style="margin-top:14px">
         <h3>You built the method!</h3>
         <p>Here is the scientific method in the exact test order:</p>
-        <ol id="methodFinal"></ol>
+        <div class="stairs" id="methodFinal"></div>
         <div class="btn-row">
-          <button class="btn primary" type="button" onclick="finishMethod()">Done</button>
+          <button class="btn primary" type="button" id="methodDoneBtn">Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="story" class="screen" aria-label="Story lab">
+      <div class="topbar">
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
+        <h2>Story lab</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
+      </div>
+      <p class="progress" id="storyProgress">Scene 1 of 6</p>
+      <div class="bar" aria-hidden="true"><i id="storyBar"></i></div>
+      <div id="storyPlay">
+        <div class="prompt-box">
+          <div class="scene-art" id="storyArt"></div>
+          <div class="kind" id="storyKind"></div>
+          <p id="storyPrompt"></p>
+        </div>
+        <div class="choices" id="storyChoices"></div>
+        <div class="feedback" id="storyFeedback" role="status"></div>
+        <div class="step-badge" id="storyBadge"></div>
+        <div class="btn-row" id="storyNextRow" style="display:none">
+          <button class="btn primary" type="button" id="storyNextBtn">Next scene</button>
+        </div>
+      </div>
+      <div id="storyDone" class="done-box" hidden>
+        <h3 id="storyDoneTitle">Mystery solved!</h3>
+        <p id="storyDoneText">You walked the scientific method from start to finish.</p>
+        <div class="btn-row">
+          <button class="btn primary" type="button" id="storyDoneBtn">Done</button>
         </div>
       </div>
     </section>
 
     <section id="results" class="screen" aria-label="Play all results">
       <div class="topbar">
-        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <button class="btn ghost" type="button" data-act="home" aria-label="Back to home">Home</button>
         <h2>Quest complete</h2>
+        <button class="mute-btn" type="button" data-act="mute" aria-label="Mute sounds"></button>
       </div>
       <div class="done-box">
         <h3 id="resultsTitle">Amazing scientist!</h3>
         <div class="stars" id="resultsStars" aria-hidden="true"></div>
         <p id="resultsText"></p>
         <ul id="resultsBreak"></ul>
+        <div class="parent" id="resultsParent"></div>
         <div class="btn-row">
-          <button class="btn gold" type="button" onclick="startPlayAll()">Play again</button>
-          <button class="btn primary" type="button" onclick="goHome()">Home</button>
+          <button class="btn gold" type="button" id="playAgainBtn">Play again</button>
+          <button class="btn primary" type="button" data-act="home">Home</button>
         </div>
       </div>
     </section>
   </div>
-
   <script>
-    (function () {
+  (function () {
       var VOCAB = [
-        { term: "Design", definition: "To think and plan in order to create." },
-        { term: "Science", definition: "The study of the natural world through observation and experimentation." },
-        { term: "Scientist", definition: "The people who explore science." },
-        { term: "Engineer", definition: "Someone who uses math and science to solve problems." },
-        { term: "Observe", definition: "To watch carefully." },
-        { term: "Experiment", definition: "An organized test to try and find a solution." },
-        { term: "Hypothesis", definition: "An educated guess." }
+        { term: "Design", definition: "To think and plan in order to create.", key: "design" },
+        { term: "Science", definition: "The study of the natural world through observation and experimentation.", key: "science" },
+        { term: "Scientist", definition: "The people who explore science.", key: "scientist" },
+        { term: "Engineer", definition: "Someone who uses math and science to solve problems.", key: "engineer" },
+        { term: "Observe", definition: "To watch carefully.", key: "observe" },
+        { term: "Experiment", definition: "An organized test to try and find a solution.", key: "experiment" },
+        { term: "Hypothesis", definition: "An educated guess.", key: "hypothesis" }
       ];
 
       var SAFETY_REAL = [
-        "Behave responsibly",
-        "Follow all instructions",
-        "No eating or drinking",
-        "Dispose of waste as directed",
-        "Wear protective gear",
-        "Report accidents immediately",
-        "Know emergency procedures",
-        "Check equipment before use",
-        "Don’t leave a flame unattended"
+        { text: "Behave responsibly", key: "behave" },
+        { text: "Follow all instructions", key: "follow" },
+        { text: "No eating or drinking", key: "noeat" },
+        { text: "Dispose of waste as directed", key: "waste" },
+        { text: "Wear protective gear", key: "gear" },
+        { text: "Report accidents immediately", key: "report" },
+        { text: "Know emergency procedures", key: "emergency" },
+        { text: "Check equipment before use", key: "checkeq" },
+        { text: "Don’t leave a flame unattended", key: "flame" }
       ];
 
       var SAFETY_FAKE = [
-        "Run in the lab",
-        "Taste chemicals",
-        "Wear flip-flops",
-        "Mix any two liquids"
+        { text: "Run in the lab", key: "run" },
+        { text: "Taste chemicals", key: "taste" },
+        { text: "Wear flip-flops", key: "flops" },
+        { text: "Mix any two liquids", key: "mix" }
       ];
 
       var METHOD = [
@@ -670,116 +1001,567 @@
         "Reflect and Correct"
       ];
 
+      function svg(vb, inner) {
+        return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="' + vb + '" aria-hidden="true">' + inner + "</svg>";
+      }
+
+      function art(key) {
+        var A = {
+          design: svg("0 0 64 64",
+            '<rect x="10" y="8" width="36" height="46" rx="4" fill="#FFF8E8" stroke="#0B7A75" stroke-width="2.5"/>' +
+            '<path d="M16 18h24M16 26h18M16 34h22M16 42h12" stroke="#0B7A75" stroke-width="2.2" stroke-linecap="round"/>' +
+            '<path d="M42 36l8-16 4 2-8 16-5 1z" fill="#F4B400" stroke="#C48A00" stroke-width="1.4"/>' +
+            '<circle cx="50" cy="20" r="2" fill="#C48A00"/>'),
+          science: svg("0 0 64 64",
+            '<circle cx="26" cy="28" r="16" fill="#B8EFE8" stroke="#06514E" stroke-width="2.2"/>' +
+            '<ellipse cx="26" cy="28" rx="7" ry="16" fill="none" stroke="#0B7A75" stroke-width="1.6"/>' +
+            '<path d="M11 28h30M16 18c6 3 14 3 20 0M16 38c6-3 14-3 20 0" fill="none" stroke="#0B7A75" stroke-width="1.5"/>' +
+            '<path d="M40 30h8l4 14H38l2-14z" fill="#13A39C" stroke="#06514E" stroke-width="1.8"/>' +
+            '<circle cx="44" cy="40" r="3" fill="#F4B400"/><circle cx="49" cy="36" r="2" fill="#fff"/>'),
+          scientist: svg("0 0 64 64",
+            '<circle cx="32" cy="18" r="10" fill="#F3D2B3"/>' +
+            '<path d="M22 16c2-8 16-8 20 0" fill="#3A2A1A"/>' +
+            '<circle cx="28" cy="18" r="4" fill="none" stroke="#06514E" stroke-width="1.6"/>' +
+            '<circle cx="38" cy="18" r="4" fill="none" stroke="#06514E" stroke-width="1.6"/>' +
+            '<path d="M32 18h2" stroke="#06514E" stroke-width="1.6"/>' +
+            '<path d="M20 36c2-8 22-8 24 0v16H20z" fill="#E8F6F4" stroke="#0B7A75" stroke-width="2"/>' +
+            '<circle cx="50" cy="40" r="9" fill="none" stroke="#F4B400" stroke-width="3"/>' +
+            '<path d="M56 46l6 6" stroke="#C48A00" stroke-width="3" stroke-linecap="round"/>'),
+          engineer: svg("0 0 64 64",
+            '<path d="M16 22h32l-4 8H20z" fill="#F4B400" stroke="#C48A00" stroke-width="1.8"/>' +
+            '<rect x="22" y="14" width="20" height="10" rx="3" fill="#F4B400" stroke="#C48A00" stroke-width="1.6"/>' +
+            '<rect x="10" y="34" width="30" height="22" rx="3" fill="#FFF8E8" stroke="#0B7A75" stroke-width="2"/>' +
+            '<path d="M16 42h18M16 48h12" stroke="#0B7A75" stroke-width="2"/>' +
+            '<circle cx="50" cy="46" r="8" fill="none" stroke="#06514E" stroke-width="2.4"/>' +
+            '<circle cx="50" cy="46" r="3" fill="#13A39C"/>'),
+          observe: svg("0 0 64 64",
+            '<ellipse cx="20" cy="32" rx="14" ry="12" fill="#fff" stroke="#06514E" stroke-width="2.4"/>' +
+            '<ellipse cx="44" cy="32" rx="14" ry="12" fill="#fff" stroke="#06514E" stroke-width="2.4"/>' +
+            '<circle cx="22" cy="32" r="6" fill="#0B7A75"/><circle cx="46" cy="32" r="6" fill="#0B7A75"/>' +
+            '<circle cx="24" cy="30" r="2" fill="#fff"/><circle cx="48" cy="30" r="2" fill="#fff"/>'),
+          experiment: svg("0 0 64 64",
+            '<rect x="8" y="48" width="48" height="6" rx="2" fill="#C4A574"/>' +
+            '<path d="M18 14v10l-6 22h16L22 24V14z" fill="#B8EFE8" stroke="#06514E" stroke-width="2"/>' +
+            '<path d="M42 12v12l-6 22h16L46 24V12z" fill="#FFE8A3" stroke="#06514E" stroke-width="2"/>' +
+            '<path d="M16 14h8M40 12h8" stroke="#06514E" stroke-width="2.2" stroke-linecap="round"/>' +
+            '<circle cx="20" cy="40" r="2.2" fill="#0B7A75"/><circle cx="44" cy="38" r="2.2" fill="#C48A00"/>'),
+          hypothesis: svg("0 0 64 64",
+            '<circle cx="32" cy="26" r="14" fill="#FFF3C4" stroke="#C48A00" stroke-width="2.2"/>' +
+            '<path d="M26 40h12l-2 6H28z" fill="#F4B400" stroke="#C48A00" stroke-width="1.6"/>' +
+            '<rect x="26" y="48" width="12" height="4" rx="1" fill="#C48A00"/>' +
+            '<path d="M32 16v6M22 26h6M36 26h6M25 19l4 3M39 19l-4 3" stroke="#C48A00" stroke-width="2" stroke-linecap="round"/>')
+        };
+        return A[key] || A.science;
+      }
+
+      function ico(key) {
+        var I = {
+          playall: svg("0 0 64 64",
+            '<path d="M32 8l6 16h16l-13 10 5 16-14-10-14 10 5-16L10 24h16z" fill="#F4B400" stroke="#C48A00" stroke-width="2"/>'),
+          flash: svg("0 0 64 64",
+            '<rect x="10" y="14" width="28" height="36" rx="4" fill="#fff" stroke="#0B7A75" stroke-width="2" transform="rotate(-8 24 32)"/>' +
+            '<rect x="24" y="14" width="28" height="36" rx="4" fill="#FFF8E8" stroke="#C48A00" stroke-width="2" transform="rotate(10 38 32)"/>'),
+          vocab: svg("0 0 64 64",
+            '<rect x="12" y="10" width="40" height="44" rx="5" fill="#fff" stroke="#0B7A75" stroke-width="2.2"/>' +
+            '<path d="M20 22h24M20 32h18M20 42h14" stroke="#0B7A75" stroke-width="2.2" stroke-linecap="round"/>' +
+            '<circle cx="44" cy="42" r="8" fill="#F4B400"/><path d="M41 42l2.2 2.2L48 39" fill="none" stroke="#06514E" stroke-width="2" stroke-linecap="round"/>'),
+          memory: svg("0 0 64 64",
+            '<rect x="8" y="16" width="22" height="30" rx="4" fill="#13A39C" stroke="#06514E" stroke-width="2"/>' +
+            '<rect x="34" y="16" width="22" height="30" rx="4" fill="#F4B400" stroke="#C48A00" stroke-width="2"/>' +
+            '<path d="M14 28h10M40 28h10" stroke="#fff" stroke-width="2"/>'),
+          safety: svg("0 0 64 64",
+            '<path d="M10 28c0-10 22-16 22-16s22 6 22 16v8c0 12-10 20-22 22C20 56 10 48 10 36z" fill="#B8EFE8" stroke="#06514E" stroke-width="2"/>' +
+            '<ellipse cx="24" cy="32" rx="8" ry="6" fill="#fff" stroke="#0B7A75" stroke-width="2"/>' +
+            '<ellipse cx="40" cy="32" rx="8" ry="6" fill="#fff" stroke="#0B7A75" stroke-width="2"/>'),
+          method: svg("0 0 64 64",
+            '<rect x="10" y="10" width="28" height="10" rx="3" fill="#D4F1EE" stroke="#0B7A75" stroke-width="1.8"/>' +
+            '<rect x="18" y="27" width="28" height="10" rx="3" fill="#13A39C" stroke="#06514E" stroke-width="1.8"/>' +
+            '<rect x="26" y="44" width="28" height="10" rx="3" fill="#F4B400" stroke="#C48A00" stroke-width="1.8"/>'),
+          story: svg("0 0 64 64",
+            '<rect x="6" y="38" width="52" height="14" rx="2" fill="#C4A574"/>' +
+            '<rect x="10" y="28" width="18" height="12" fill="#8B6A3A"/>' +
+            '<circle cx="48" cy="16" r="8" fill="#F4B400"/>' +
+            '<rect x="28" y="34" width="14" height="6" rx="1" fill="#B8EFE8"/>' +
+            '<circle cx="32" cy="32" r="2" fill="#fff"/><circle cx="38" cy="32" r="2" fill="#fff"/>'),
+          speaker: svg("0 0 64 64",
+            '<path d="M14 26h10l12-10v32L24 38H14z" fill="#0B7A75"/>' +
+            '<path d="M42 22c6 6 6 14 0 20M48 16c10 10 10 22 0 32" fill="none" stroke="#0B7A75" stroke-width="3" stroke-linecap="round"/>'),
+          muted: svg("0 0 64 64",
+            '<path d="M14 26h10l12-10v32L24 38H14z" fill="#C05621"/>' +
+            '<path d="M42 22l16 20M58 22L42 42" stroke="#C05621" stroke-width="4" stroke-linecap="round"/>'),
+          check: svg("0 0 64 64",
+            '<circle cx="32" cy="32" r="26" fill="#1B7A3D"/>' +
+            '<path d="M18 33l10 10 18-20" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>'),
+          beaker: svg("0 0 64 64",
+            '<path d="M22 10h20M24 10v8l-8 30c-1 4 2 8 6 8h24c4 0 7-4 6-8L42 18V10" fill="#B8EFE8" stroke="#06514E" stroke-width="2.4"/>' +
+            '<path d="M20 40h24" stroke="#0B7A75" stroke-width="2"/><circle cx="30" cy="34" r="2" fill="#fff"/>'),
+          down: svg("0 0 24 16",
+            '<path d="M12 2v10M6 8l6 6 6-6" fill="none" stroke="#0B7A75" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>'),
+          behave: svg("0 0 64 64",
+            '<circle cx="32" cy="16" r="8" fill="#F3D2B3"/><path d="M20 56V36c0-6 24-6 24 0v20" fill="#0B7A75"/>' +
+            '<path d="M44 24v14" stroke="#F3D2B3" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="20" r="5" fill="#F4B400"/>'),
+          follow: svg("0 0 64 64",
+            '<rect x="14" y="8" width="36" height="48" rx="4" fill="#fff" stroke="#0B7A75" stroke-width="2"/>' +
+            '<path d="M22 22h8M22 34h8M22 46h8" stroke="#0B7A75" stroke-width="2"/>' +
+            '<path d="M36 20l4 4 8-8M36 32l4 4 8-8M36 44l4 4 8-8" fill="none" stroke="#1B7A3D" stroke-width="2.4" stroke-linecap="round"/>'),
+          noeat: svg("0 0 64 64",
+            '<circle cx="32" cy="32" r="22" fill="#FFE8D6" stroke="#C05621" stroke-width="2.4"/>' +
+            '<path d="M22 24c6 4 14 4 20 0M24 40h16" stroke="#C05621" stroke-width="2.4" stroke-linecap="round"/>' +
+            '<path d="M16 16l32 32" stroke="#C05621" stroke-width="4" stroke-linecap="round"/>'),
+          waste: svg("0 0 64 64",
+            '<rect x="16" y="22" width="32" height="30" rx="4" fill="#D4F1EE" stroke="#06514E" stroke-width="2.2"/>' +
+            '<path d="M12 22h40M24 22V14h16v8M26 30v14M32 30v14M38 30v14" stroke="#06514E" stroke-width="2.2" stroke-linecap="round"/>'),
+          gear: svg("0 0 64 64",
+            '<path d="M12 26c0-8 20-14 20-14s20 6 20 14v6c0 10-8 16-20 18C20 50 12 44 12 34z" fill="#B8EFE8" stroke="#06514E" stroke-width="2"/>' +
+            '<ellipse cx="24" cy="30" rx="7" ry="5" fill="#fff" stroke="#0B7A75" stroke-width="2"/>' +
+            '<ellipse cx="40" cy="30" rx="7" ry="5" fill="#fff" stroke="#0B7A75" stroke-width="2"/>'),
+          report: svg("0 0 64 64",
+            '<rect x="14" y="18" width="36" height="28" rx="4" fill="#fff" stroke="#C05621" stroke-width="2.2"/>' +
+            '<path d="M24 18c0-6 16-6 16 0" fill="none" stroke="#C05621" stroke-width="2.2"/>' +
+            '<rect x="28" y="30" width="8" height="8" fill="#E25B4C"/>'),
+          emergency: svg("0 0 64 64",
+            '<rect x="18" y="14" width="28" height="36" rx="4" fill="#1B7A3D" stroke="#06514E" stroke-width="2"/>' +
+            '<path d="M32 22v16M24 30h16" stroke="#fff" stroke-width="4" stroke-linecap="round"/>' +
+            '<circle cx="32" cy="52" r="4" fill="#F4B400"/>'),
+          checkeq: svg("0 0 64 64",
+            '<path d="M38 14h10v8l6 18H34l4-18z" fill="#B8EFE8" stroke="#06514E" stroke-width="2"/>' +
+            '<circle cx="24" cy="28" r="10" fill="none" stroke="#0B7A75" stroke-width="3"/>' +
+            '<path d="M31 35l8 10" stroke="#0B7A75" stroke-width="3" stroke-linecap="round"/>'),
+          flame: svg("0 0 64 64",
+            '<path d="M32 10c8 12-2 16 4 26 2 4-2 16-4 16s-10-8-8-18c2-8 4-16 8-24z" fill="#F4B400" stroke="#C05621" stroke-width="2"/>' +
+            '<ellipse cx="48" cy="22" rx="10" ry="8" fill="#fff" stroke="#06514E" stroke-width="2"/>' +
+            '<circle cx="48" cy="22" r="3" fill="#0B7A75"/>'),
+          run: svg("0 0 64 64",
+            '<circle cx="40" cy="12" r="7" fill="#F3D2B3"/><path d="M18 56l10-16 8 6 8 16M28 28l8 8 14-4" stroke="#C05621" stroke-width="4" stroke-linecap="round" fill="none"/>'),
+          taste: svg("0 0 64 64",
+            '<circle cx="32" cy="26" r="12" fill="#F3D2B3"/><path d="M24 36c2 10 14 10 16 0" fill="#E25B4C"/>' +
+            '<path d="M48 12v16" stroke="#13A39C" stroke-width="3"/><circle cx="48" cy="30" r="4" fill="#13A39C"/>'),
+          flops: svg("0 0 64 64",
+            '<path d="M14 28c0-8 12-16 20-16 14 0 18 12 18 20-2 12-16 20-28 16-8-2-10-12-10-20z" fill="#FFE8D6" stroke="#C05621" stroke-width="2"/>' +
+            '<path d="M26 24c8 4 16 2 22-6" fill="none" stroke="#C05621" stroke-width="3"/>'),
+          mix: svg("0 0 64 64",
+            '<path d="M14 12h12l-4 20H16z" fill="#B8EFE8" stroke="#06514E" stroke-width="2"/>' +
+            '<path d="M38 12h12l4 20H36z" fill="#FFE8A3" stroke="#06514E" stroke-width="2"/>' +
+            '<path d="M20 40c8 0 10 12 20 12" fill="none" stroke="#C05621" stroke-width="3"/>'),
+          ice1: svg("0 0 200 90",
+            '<rect x="8" y="58" width="184" height="24" rx="3" fill="#C4A574"/>' +
+            '<rect x="20" y="40" width="44" height="22" fill="#8B6A3A"/>' +
+            '<circle cx="168" cy="18" r="12" fill="#F4B400"/>' +
+            '<rect x="86" y="50" width="40" height="10" rx="2" fill="#8EC8E8"/>' +
+            '<rect x="92" y="42" width="10" height="10" fill="#D9F2FF" stroke="#4A90A4"/>' +
+            '<rect x="108" y="40" width="10" height="12" fill="#D9F2FF" stroke="#4A90A4"/>'),
+          ice2: svg("0 0 200 90",
+            '<rect x="20" y="16" width="70" height="58" rx="6" fill="#FFF8E8" stroke="#0B7A75" stroke-width="3"/>' +
+            '<path d="M32 32h46M32 44h36M32 56h40" stroke="#0B7A75" stroke-width="3" stroke-linecap="round"/>' +
+            '<circle cx="150" cy="40" r="22" fill="#B8EFE8" stroke="#06514E" stroke-width="3"/>' +
+            '<circle cx="150" cy="40" r="8" fill="#fff"/>'),
+          ice3: svg("0 0 200 90",
+            '<circle cx="100" cy="38" r="22" fill="#FFF3C4" stroke="#C48A00" stroke-width="3"/>' +
+            '<path d="M92 60h16l-3 10h-10z" fill="#F4B400"/>' +
+            '<rect x="20" y="64" width="160" height="12" fill="#C4A574"/>' +
+            '<rect x="70" y="54" width="16" height="12" fill="#D9F2FF" stroke="#4A90A4"/>'),
+          ice4: svg("0 0 200 90",
+            '<circle cx="46" cy="16" r="10" fill="#F4B400"/>' +
+            '<rect x="16" y="50" width="70" height="28" rx="4" fill="#FFF3C4" stroke="#C48A00" stroke-width="2"/>' +
+            '<rect x="114" y="50" width="70" height="28" rx="4" fill="#D4F1EE" stroke="#0B7A75" stroke-width="2"/>' +
+            '<rect x="28" y="38" width="14" height="14" fill="#D9F2FF" stroke="#4A90A4"/>' +
+            '<rect x="128" y="34" width="14" height="18" fill="#D9F2FF" stroke="#4A90A4"/>' +
+            '<text x="28" y="84" font-size="11" font-weight="700" fill="#7A5600" font-family="sans-serif">sun</text>' +
+            '<text x="128" y="84" font-size="11" font-weight="700" fill="#06514E" font-family="sans-serif">shade</text>'),
+          ice5: svg("0 0 200 90",
+            '<rect x="16" y="50" width="70" height="28" rx="4" fill="#FFF3C4" stroke="#C48A00" stroke-width="2"/>' +
+            '<rect x="114" y="36" width="70" height="42" rx="4" fill="#D4F1EE" stroke="#0B7A75" stroke-width="2"/>' +
+            '<ellipse cx="50" cy="66" rx="16" ry="6" fill="#8EC8E8"/>' +
+            '<rect x="136" y="44" width="16" height="18" fill="#D9F2FF" stroke="#4A90A4"/>' +
+            '<path d="M50 20v16" stroke="#C05621" stroke-width="3"/><circle cx="50" cy="16" r="5" fill="#E25B4C"/>'),
+          ice6: svg("0 0 200 90",
+            '<rect x="30" y="14" width="140" height="62" rx="6" fill="#fff" stroke="#0B7A75" stroke-width="3"/>' +
+            '<path d="M46 32h100M46 46h80M46 60h90" stroke="#B7D4D0" stroke-width="3"/>' +
+            '<path d="M150 22l8 8 14-14" fill="none" stroke="#1B7A3D" stroke-width="3" stroke-linecap="round"/>')
+        };
+        return I[key] || I.beaker;
+      }
+
+      function mascotSvg() {
+        return svg("0 0 120 120",
+          '<circle cx="60" cy="60" r="56" fill="#D4F1EE"/>' +
+          '<circle cx="60" cy="40" r="20" fill="#F3D2B3"/>' +
+          '<path d="M40 36c4-16 36-16 40 0" fill="#3A2A1A"/>' +
+          '<circle cx="52" cy="40" r="7" fill="#fff" stroke="#06514E" stroke-width="2"/>' +
+          '<circle cx="68" cy="40" r="7" fill="#fff" stroke="#06514E" stroke-width="2"/>' +
+          '<circle cx="53" cy="40" r="3" fill="#06514E"/><circle cx="69" cy="40" r="3" fill="#06514E"/>' +
+          '<path d="M58 40h4" stroke="#06514E" stroke-width="2"/>' +
+          '<path d="M54 48c4 3 8 3 12 0" fill="none" stroke="#C05621" stroke-width="2" stroke-linecap="round"/>' +
+          '<path d="M32 70c4-16 52-16 56 0v28H32z" fill="#E8F6F4" stroke="#0B7A75" stroke-width="3"/>' +
+          '<path d="M78 78h18l4 20H76z" fill="#13A39C" stroke="#06514E" stroke-width="2"/>' +
+          '<circle cx="86" cy="90" r="3" fill="#B8EFE8"/><circle cx="92" cy="86" r="2" fill="#fff"/>' +
+          '<path d="M44 92h20" stroke="#0B7A75" stroke-width="2"/>');
+      }
+
       var playAll = false;
-      var scores = { vocabFirst: 0, vocabTotal: 0, safetyGood: 0, safetyBad: 0, methodFirst: 0, methodWrong: 0 };
+      var muted = false;
+      var audioCtx = null;
+      var reduceMotion = false;
+      var doneModes = { flash: false, vocab: false, memory: false, safety: false, method: false, story: false };
+      var scores = blankScores();
+      var weakWords = [];
+      var weakSteps = [];
 
       var flashOrder = [];
       var flashIndex = 0;
       var flashFlipped = false;
+      var flashSeen = {};
 
       var vocabQueue = [];
       var vocabIndex = 0;
       var vocabMissed = [];
       var vocabAnswered = false;
       var vocabRetrying = false;
+      var vocabStreak = 0;
+
+      var memCards = [];
+      var memFlip = [];
+      var memLock = false;
+      var memPairs = 0;
+      var memMiss = {};
 
       var safetyNeeded = 4;
       var safetyGot = 0;
 
       var methodNext = 0;
       var methodTriedThis = false;
+      var methodMiss = {};
+
+      var storyIndex = 0;
+      var storyAnswered = false;
+      var storyFactGot = {};
+      var storyMiss = {};
+
+      function blankScores() {
+        return {
+          vocabFirst: 0,
+          vocabTotal: 0,
+          safetyGood: 0,
+          safetyBad: 0,
+          methodFirst: 0,
+          methodWrong: 0,
+          storyFirst: 0,
+          storyWrong: 0
+        };
+      }
 
       function $(id) { return document.getElementById(id); }
 
+      function prefersReduce() {
+        try {
+          return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+        } catch (e) { return false; }
+      }
+
       function shuffle(arr) {
         var a = arr.slice();
-        for (var i = a.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = a[i]; a[i] = a[j]; a[j] = t;
+        var i, j, t;
+        for (i = a.length - 1; i > 0; i--) {
+          j = Math.floor(Math.random() * (i + 1));
+          t = a[i]; a[i] = a[j]; a[j] = t;
         }
         return a;
       }
 
       function show(id) {
         var screens = document.querySelectorAll(".screen");
-        for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
-        $(id).classList.add("active");
-        window.scrollTo(0, 0);
+        var i, el;
+        for (i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+        el = $(id);
+        if (el) el.classList.add("active");
+        try { window.scrollTo(0, 0); } catch (e) {}
       }
 
       function setBar(el, frac) {
-        el.style.width = Math.max(0, Math.min(1, frac)) * 100 + "%";
+        if (!el) return;
+        el.style.width = (Math.max(0, Math.min(1, frac)) * 100) + "%";
+      }
+
+      function loadMute() {
+        try { muted = localStorage.getItem("sq-mute") === "1"; } catch (e) { muted = false; }
+      }
+
+      function saveMute() {
+        try { localStorage.setItem("sq-mute", muted ? "1" : "0"); } catch (e) {}
+      }
+
+      function ensureAudio() {
+        try {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) return;
+          if (!audioCtx) audioCtx = new AC();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+        } catch (e) {}
+      }
+
+      function beep(freq, dur, type, gain, when) {
+        if (muted || !audioCtx) return;
+        try {
+          var o = audioCtx.createOscillator();
+          var g = audioCtx.createGain();
+          o.type = type || "sine";
+          o.frequency.value = freq;
+          g.gain.value = gain || 0.06;
+          o.connect(g);
+          g.connect(audioCtx.destination);
+          var t0 = audioCtx.currentTime + (when || 0);
+          g.gain.setValueAtTime(g.gain.value, t0);
+          g.gain.exponentialRampToValueAtTime(0.001, t0 + dur);
+          o.start(t0);
+          o.stop(t0 + dur + 0.02);
+        } catch (e) {}
+      }
+
+      function snd(kind) {
+        ensureAudio();
+        if (kind === "tap") beep(520, 0.06, "triangle", 0.04);
+        else if (kind === "ok") { beep(660, 0.09, "sine", 0.06); beep(880, 0.12, "sine", 0.05, 0.08); }
+        else if (kind === "no") beep(140, 0.14, "square", 0.05);
+        else if (kind === "spark") { beep(880, 0.06, "sine", 0.05); beep(1170, 0.07, "sine", 0.045, 0.06); beep(1560, 0.1, "sine", 0.04, 0.12); }
+        else if (kind === "win") {
+          beep(523, 0.12, "sine", 0.06);
+          beep(659, 0.12, "sine", 0.06, 0.12);
+          beep(784, 0.12, "sine", 0.06, 0.24);
+          beep(1046, 0.22, "sine", 0.07, 0.36);
+        }
+      }
+
+      function buzz(ok) {
+        try {
+          if (navigator.vibrate) navigator.vibrate(ok ? 16 : 32);
+        } catch (e) {}
+      }
+
+      function burstConfetti() {
+        var c = $("confetti");
+        if (!c || reduceMotion) return;
+        var ctx = c.getContext("2d");
+        if (!ctx) return;
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
+        var bits = [];
+        var colors = ["#0B7A75", "#F4B400", "#13A39C", "#C05621", "#1B7A3D", "#fff"];
+        var i, n = 80;
+        for (i = 0; i < n; i++) {
+          bits.push({
+            x: Math.random() * c.width,
+            y: -20 - Math.random() * 80,
+            w: 6 + Math.random() * 6,
+            h: 8 + Math.random() * 8,
+            c: colors[i % colors.length],
+            vy: 2.2 + Math.random() * 3.2,
+            vx: -1.4 + Math.random() * 2.8,
+            r: Math.random() * 6
+          });
+        }
+        var frames = 0;
+        function tick() {
+          frames += 1;
+          ctx.clearRect(0, 0, c.width, c.height);
+          var alive = false;
+          for (i = 0; i < bits.length; i++) {
+            var b = bits[i];
+            b.y += b.vy;
+            b.x += b.vx;
+            b.r += 0.12;
+            if (b.y < c.height + 20) alive = true;
+            ctx.save();
+            ctx.translate(b.x, b.y);
+            ctx.rotate(b.r);
+            ctx.fillStyle = b.c;
+            ctx.fillRect(-b.w / 2, -b.h / 2, b.w, b.h);
+            ctx.restore();
+          }
+          if (alive && frames < 90) requestAnimationFrame(tick);
+          else ctx.clearRect(0, 0, c.width, c.height);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      function markDone(mode) {
+        doneModes[mode] = true;
+        renderHome();
+      }
+
+      function noteWeakWord(term) {
+        if (weakWords.indexOf(term) === -1) weakWords.push(term);
+      }
+
+      function noteWeakStep(step) {
+        if (weakSteps.indexOf(step) === -1) weakSteps.push(step);
+      }
+
+      function paintMute() {
+        var html = muted ? ico("muted") : ico("speaker");
+        var nodes = document.querySelectorAll(".mute-btn");
+        var i, btn;
+        for (i = 0; i < nodes.length; i++) {
+          btn = nodes[i];
+          btn.innerHTML = html;
+          btn.setAttribute("aria-label", muted ? "Unmute sounds" : "Mute sounds");
+          if (muted) btn.classList.add("is-muted");
+          else btn.classList.remove("is-muted");
+        }
+        var speak = $("speakBtn");
+        if (speak) speak.innerHTML = ico("speaker");
+      }
+
+      function toggleMute() {
+        muted = !muted;
+        saveMute();
+        paintMute();
+        if (!muted) { ensureAudio(); snd("tap"); }
+        if (muted && window.speechSynthesis) {
+          try { speechSynthesis.cancel(); } catch (e) {}
+        }
       }
 
       function goHome() {
         playAll = false;
-        if (window.speechSynthesis) speechSynthesis.cancel();
+        if (window.speechSynthesis) {
+          try { speechSynthesis.cancel(); } catch (e) {}
+        }
+        renderHome();
         show("home");
       }
 
-      window.goHome = goHome;
+      function renderHome() {
+        var box = $("homeStations");
+        if (!box) return;
+        var mascot = $("mascot");
+        if (mascot && !mascot.getAttribute("data-ready")) {
+          mascot.innerHTML = mascotSvg();
+          mascot.setAttribute("data-ready", "1");
+        }
+        var rooms = [
+          { id: "playall", title: "Play all", why: "The test dress-rehearsal.", cls: "playall", icon: "playall", check: false },
+          { id: "flash", title: "Flashcards", why: "Flip and hear every word.", cls: "", icon: "flash", check: doneModes.flash },
+          { id: "vocab", title: "Vocab quiz", why: "Match words and meanings.", cls: "", icon: "vocab", check: doneModes.vocab },
+          { id: "memory", title: "Memory match", why: "Pair each word with its meaning.", cls: "", icon: "memory", check: doneModes.memory },
+          { id: "safety", title: "Lab safety", why: "Spot 4 real lab rules.", cls: "", icon: "safety", check: doneModes.safety },
+          { id: "method", title: "Method mix-up", why: "Build the 6-step staircase.", cls: "", icon: "method", check: doneModes.method },
+          { id: "story", title: "Story lab", why: "Solve the melting-ice mystery.", cls: "", icon: "story", check: doneModes.story }
+        ];
+        var html = '<p class="room-label">Lab stations</p>';
+        var i, r;
+        for (i = 0; i < rooms.length; i++) {
+          r = rooms[i];
+          if (i === 1) html += '<p class="room-label">Practice rooms</p>';
+          html += '<button class="station ' + r.cls + (r.check ? " did" : "") + '" type="button" data-mode="' + r.id + '" aria-label="' + r.title + ". " + r.why + '">';
+          html += '<span class="ico">' + ico(r.icon) + "</span>";
+          html += "<span><strong>" + r.title + '</strong><span class="why">' + r.why + "</span></span>";
+          if (r.id !== "playall") html += '<span class="check">' + (r.check ? ico("check") : "") + "</span>";
+          html += "</button>";
+        }
+        box.innerHTML = html;
+        paintMute();
+      }
+
+      function startMode(id) {
+        snd("tap");
+        if (id === "playall") startPlayAll();
+        else if (id === "flash") startFlashcards();
+        else if (id === "vocab") startVocab();
+        else if (id === "memory") startMemory();
+        else if (id === "safety") startSafety();
+        else if (id === "method") startMethod();
+        else if (id === "story") startStory();
+      }
+
+      function vocabByTerm(term) {
+        var i;
+        for (i = 0; i < VOCAB.length; i++) if (VOCAB[i].term === term) return VOCAB[i];
+        return VOCAB[0];
+      }
 
       /* ---------- Flashcards ---------- */
       function startFlashcards() {
         flashOrder = shuffle(VOCAB);
         flashIndex = 0;
+        flashSeen = {};
         renderFlash();
         show("flash");
+        paintMute();
       }
-      window.startFlashcards = startFlashcards;
 
       function renderFlash() {
         var item = flashOrder[flashIndex];
+        if (!item) return;
         flashFlipped = false;
-        $("flipCard").classList.remove("is-flipped");
-        $("flashTerm").textContent = item.term;
-        $("flashDef").textContent = item.definition;
-        $("flashProgress").textContent = "Card " + (flashIndex + 1) + " of " + flashOrder.length;
+        flashSeen[item.term] = true;
+        var card = $("flipCard");
+        if (card) card.classList.remove("is-flipped");
+        var term = $("flashTerm");
+        var def = $("flashDef");
+        var front = $("flashArtFront");
+        var back = $("flashArtBack");
+        if (term) term.textContent = item.term;
+        if (def) def.textContent = item.definition;
+        if (front) front.innerHTML = art(item.key);
+        if (back) back.innerHTML = art(item.key);
+        var prog = $("flashProgress");
+        if (prog) prog.textContent = "Card " + (flashIndex + 1) + " of " + flashOrder.length;
         setBar($("flashBar"), (flashIndex + 1) / flashOrder.length);
-        $("flipCard").setAttribute("aria-label", "Flashcard: " + item.term + ". Tap to flip.");
+        if (card) card.setAttribute("aria-label", "Flashcard: " + item.term + ". Tap to flip.");
+        var next = $("flashNext");
+        if (next) next.textContent = (flashIndex === flashOrder.length - 1) ? "Finish" : "Next";
       }
 
       function flipCard() {
         flashFlipped = !flashFlipped;
-        $("flipCard").classList.toggle("is-flipped", flashFlipped);
+        var card = $("flipCard");
+        if (card) card.classList.toggle("is-flipped", flashFlipped);
+        snd("tap");
       }
-      window.flipCard = flipCard;
 
       function flashNav(dir) {
+        if (dir === 1 && flashIndex === flashOrder.length - 1) {
+          markDone("flash");
+          snd("win");
+          burstConfetti();
+          goHome();
+          return;
+        }
         flashIndex = (flashIndex + dir + flashOrder.length) % flashOrder.length;
         renderFlash();
+        snd("tap");
       }
-      window.flashNav = flashNav;
 
       function speakVisible() {
-        if (!window.speechSynthesis) return;
+        if (muted || !window.speechSynthesis) return;
         var item = flashOrder[flashIndex];
+        if (!item) return;
         var text = flashFlipped ? item.definition : item.term;
-        speechSynthesis.cancel();
-        var u = new SpeechSynthesisUtterance(text);
-        u.lang = "en-US";
-        u.rate = 0.9;
-        u.pitch = 1.05;
-        var voices = speechSynthesis.getVoices();
-        for (var i = 0; i < voices.length; i++) {
-          if (voices[i].lang && voices[i].lang.indexOf("en-US") === 0) {
-            u.voice = voices[i];
-            break;
+        try {
+          speechSynthesis.cancel();
+          var u = new SpeechSynthesisUtterance(text);
+          u.lang = "en-US";
+          u.rate = 0.9;
+          u.pitch = 1.05;
+          var voices = speechSynthesis.getVoices();
+          var i;
+          for (i = 0; i < voices.length; i++) {
+            if (voices[i].lang && voices[i].lang.indexOf("en-US") === 0) {
+              u.voice = voices[i];
+              break;
+            }
           }
-        }
-        speechSynthesis.speak(u);
-      }
-      window.speakVisible = speakVisible;
-      if (window.speechSynthesis) {
-        speechSynthesis.onvoiceschanged = function () {};
+          speechSynthesis.speak(u);
+        } catch (e) {}
       }
 
       /* ---------- Vocab ---------- */
       function buildVocabQueue(list) {
         var items = shuffle(list);
         var q = [];
-        for (var i = 0; i < items.length; i++) {
-          var type = (i % 2 === 0) ? "def2term" : "term2def";
+        var i, type;
+        for (i = 0; i < items.length; i++) {
+          type = (i % 2 === 0) ? "def2term" : "term2def";
           if (Math.random() < 0.5 && items.length > 1) {
             type = type === "def2term" ? "term2def" : "def2term";
           }
@@ -788,67 +1570,101 @@
         return q;
       }
 
-      function startVocab() {
-        vocabQueue = buildVocabQueue(VOCAB);
-        vocabIndex = 0;
-        vocabMissed = [];
-        vocabRetrying = false;
-        if (!playAll) scores.vocabFirst = 0;
-        scores.vocabTotal = 0;
-        $("vocabPlay").hidden = false;
-        $("vocabDone").hidden = true;
-        renderVocab();
-        show("vocab");
-      }
-      window.startVocab = startVocab;
-
       function otherTerms(except) {
         var out = [];
-        for (var i = 0; i < VOCAB.length; i++) {
+        var i;
+        for (i = 0; i < VOCAB.length; i++) {
           if (VOCAB[i].term !== except.term) out.push(VOCAB[i]);
         }
         return shuffle(out);
       }
 
+      function startVocab() {
+        vocabQueue = buildVocabQueue(VOCAB);
+        vocabIndex = 0;
+        vocabMissed = [];
+        vocabRetrying = false;
+        vocabStreak = 0;
+        if (!playAll) scores.vocabFirst = 0;
+        scores.vocabTotal = 0;
+        var play = $("vocabPlay");
+        var done = $("vocabDone");
+        if (play) play.hidden = false;
+        if (done) done.hidden = true;
+        renderVocab();
+        show("vocab");
+        paintMute();
+      }
+
+      function showStreak() {
+        var el = $("vocabStreak");
+        if (!el) return;
+        if (vocabStreak >= 3) {
+          el.classList.add("show");
+          el.innerHTML = "<b>" + vocabStreak + " in a row!</b>";
+        } else {
+          el.classList.remove("show");
+        }
+      }
+
       function renderVocab() {
         var q = vocabQueue[vocabIndex];
+        if (!q) return;
         vocabAnswered = false;
-        $("vocabNextRow").style.display = "none";
+        var nextRow = $("vocabNextRow");
+        if (nextRow) nextRow.style.display = "none";
         var fb = $("vocabFeedback");
-        fb.className = "feedback";
-        fb.textContent = "";
-        $("vocabProgress").textContent = "Question " + (vocabIndex + 1) + " of " + vocabQueue.length;
+        if (fb) { fb.className = "feedback"; fb.textContent = ""; }
+        var prog = $("vocabProgress");
+        if (prog) prog.textContent = "Question " + (vocabIndex + 1) + " of " + vocabQueue.length;
         setBar($("vocabBar"), vocabIndex / vocabQueue.length);
+        showStreak();
 
         var choices = [];
         var correct;
+        var kind = $("vocabKind");
+        var prompt = $("vocabPrompt");
         if (q.type === "def2term") {
-          $("vocabKind").textContent = "Which word matches this meaning?";
-          $("vocabPrompt").textContent = q.item.definition;
+          if (kind) kind.textContent = "Which word matches this meaning?";
+          if (prompt) prompt.textContent = q.item.definition;
           correct = q.item.term;
-          choices.push(correct);
+          choices.push(q.item);
           var others = otherTerms(q.item);
-          for (var i = 0; i < 3 && i < others.length; i++) choices.push(others[i].term);
+          var i;
+          for (i = 0; i < 3 && i < others.length; i++) choices.push(others[i]);
         } else {
-          $("vocabKind").textContent = "What does this word mean?";
-          $("vocabPrompt").textContent = q.item.term;
+          if (kind) kind.textContent = "What does this word mean?";
+          if (prompt) prompt.textContent = q.item.term;
           correct = q.item.definition;
-          choices.push(correct);
+          choices.push({ term: q.item.term, definition: q.item.definition, key: q.item.key, asDef: true });
           var others2 = otherTerms(q.item);
-          for (var j = 0; j < 3 && j < others2.length; j++) choices.push(others2[j].definition);
+          var j;
+          for (j = 0; j < 3 && j < others2.length; j++) {
+            choices.push({ term: others2[j].term, definition: others2[j].definition, key: others2[j].key, asDef: true });
+          }
         }
         choices = shuffle(choices);
         var box = $("vocabChoices");
+        if (!box) return;
         box.innerHTML = "";
-        for (var k = 0; k < choices.length; k++) {
-          var b = document.createElement("button");
+        var k, b, label, val;
+        for (k = 0; k < choices.length; k++) {
+          b = document.createElement("button");
           b.type = "button";
           b.className = "choice";
-          b.textContent = choices[k];
-          b.setAttribute("aria-label", "Choice: " + choices[k]);
-          b.onclick = (function (val) {
-            return function () { pickVocab(val, correct, q); };
-          })(choices[k]);
+          if (q.type === "def2term") {
+            val = choices[k].term;
+            label = choices[k].term;
+            b.innerHTML = '<span class="mini">' + art(choices[k].key) + "</span><span>" + label + "</span>";
+          } else {
+            val = choices[k].definition;
+            label = choices[k].definition;
+            b.textContent = label;
+          }
+          b.setAttribute("aria-label", "Choice: " + label);
+          b.onclick = (function (value) {
+            return function () { pickVocab(value, correct, q); };
+          })(val);
           box.appendChild(b);
         }
       }
@@ -859,51 +1675,67 @@
         scores.vocabTotal += 1;
         var buttons = $("vocabChoices").querySelectorAll(".choice");
         var ok = val === correct;
+        var fb = $("vocabFeedback");
         if (ok) {
           if (!vocabRetrying) scores.vocabFirst += 1;
-          $("vocabFeedback").className = "feedback show ok";
-          $("vocabFeedback").textContent = "Nice! You got it.";
+          vocabStreak += 1;
+          if (fb) { fb.className = "feedback show ok"; fb.textContent = "Nice! You got it."; }
+          snd("ok");
+          buzz(true);
         } else {
+          vocabStreak = 0;
           vocabMissed.push(q.item);
-          $("vocabFeedback").className = "feedback show no";
-          $("vocabFeedback").textContent = "Almost! " + q.item.term + " = " + q.item.definition;
+          noteWeakWord(q.item.term);
+          if (fb) {
+            fb.className = "feedback show no";
+            fb.textContent = "Almost! " + q.item.term + " = " + q.item.definition;
+          }
+          snd("no");
+          buzz(false);
         }
-        for (var i = 0; i < buttons.length; i++) {
+        showStreak();
+        var i, txt;
+        for (i = 0; i < buttons.length; i++) {
           buttons[i].disabled = true;
-          if (buttons[i].textContent === correct) buttons[i].classList.add("correct");
-          else if (buttons[i].textContent === val && !ok) buttons[i].classList.add("wrong");
+          txt = buttons[i].getAttribute("aria-label") || "";
+          if (txt === "Choice: " + correct) buttons[i].classList.add("correct");
+          else if (txt === "Choice: " + val && !ok) buttons[i].classList.add("wrong");
         }
         setBar($("vocabBar"), (vocabIndex + 1) / vocabQueue.length);
-        $("vocabNextRow").style.display = "flex";
+        var nextRow = $("vocabNextRow");
+        if (nextRow) nextRow.style.display = "flex";
       }
 
       function nextVocab() {
         vocabIndex += 1;
-        if (vocabIndex >= vocabQueue.length) {
-          endVocab();
-        } else {
-          renderVocab();
-        }
+        if (vocabIndex >= vocabQueue.length) endVocab();
+        else renderVocab();
+        snd("tap");
       }
-      window.nextVocab = nextVocab;
 
       function endVocab() {
-        $("vocabPlay").hidden = true;
-        $("vocabDone").hidden = false;
+        var play = $("vocabPlay");
+        var done = $("vocabDone");
+        if (play) play.hidden = true;
+        if (done) done.hidden = false;
         var first = scores.vocabFirst;
         var total = vocabQueue.length;
-        $("vocabDoneTitle").textContent = first === total ? "Star scientist!" : "Nice work!";
-        $("vocabDoneText").textContent = "You got " + first + " of " + total + " on the first try.";
-        $("vocabRetryBtn").style.display = (vocabMissed.length && !vocabRetrying) ? "" : "none";
-        if (playAll) {
-          $("vocabRetryBtn").style.display = "none";
-        }
+        var title = $("vocabDoneTitle");
+        var text = $("vocabDoneText");
+        if (title) title.textContent = first === total ? "Star scientist!" : "Nice work!";
+        if (text) text.textContent = "You got " + first + " of " + total + " on the first try.";
+        var retry = $("vocabRetryBtn");
+        if (retry) retry.style.display = (vocabMissed.length && !vocabRetrying && !playAll) ? "" : "none";
+        markDone("vocab");
+        snd("win");
+        burstConfetti();
       }
 
       function retryMissedVocab() {
         var unique = [];
         var seen = {};
-        for (var i = 0; i < vocabMissed.length; i++) {
+        var i;
+        for (i = 0; i < vocabMissed.length; i++) {
           if (!seen[vocabMissed[i].term]) {
             seen[vocabMissed[i].term] = true;
             unique.push(vocabMissed[i]);
@@ -913,89 +1745,240 @@
         vocabIndex = 0;
         vocabMissed = [];
         vocabRetrying = true;
-        $("vocabPlay").hidden = false;
-        $("vocabDone").hidden = true;
+        vocabStreak = 0;
+        var play = $("vocabPlay");
+        var done = $("vocabDone");
+        if (play) play.hidden = false;
+        if (done) done.hidden = true;
         renderVocab();
+        snd("tap");
       }
-      window.retryMissedVocab = retryMissedVocab;
 
       function finishVocab() {
         if (playAll) startSafety();
         else goHome();
       }
-      window.finishVocab = finishVocab;
+
+      /* ---------- Memory ---------- */
+      function startMemory() {
+        var cards = [];
+        var i, v;
+        for (i = 0; i < VOCAB.length; i++) {
+          v = VOCAB[i];
+          cards.push({ id: "t-" + v.key, pair: v.key, kind: "term", term: v.term, definition: v.definition, key: v.key });
+          cards.push({ id: "d-" + v.key, pair: v.key, kind: "def", term: v.term, definition: v.definition, key: v.key });
+        }
+        memCards = shuffle(cards);
+        memFlip = [];
+        memLock = false;
+        memPairs = 0;
+        memMiss = {};
+        var done = $("memDone");
+        var grid = $("memGrid");
+        if (done) done.hidden = true;
+        if (grid) grid.style.display = "grid";
+        var hint = $("memHint");
+        if (hint) hint.style.display = "";
+        renderMemory();
+        show("memory");
+        paintMute();
+      }
+
+      function renderMemory() {
+        var grid = $("memGrid");
+        if (!grid) return;
+        grid.innerHTML = "";
+        var i, c, b;
+        for (i = 0; i < memCards.length; i++) {
+          c = memCards[i];
+          b = document.createElement("button");
+          b.type = "button";
+          b.className = "mem-card";
+          b.setAttribute("data-idx", String(i));
+          b.setAttribute("aria-label", "Facedown memory card");
+          b.innerHTML = '<span class="back-mark">' + ico("beaker") + '</span><span class="mem-face"></span>';
+          b.onclick = (function (idx) {
+            return function () { flipMem(idx); };
+          })(i);
+          grid.appendChild(b);
+        }
+        updateMemProgress();
+      }
+
+      function updateMemProgress() {
+        var p = $("memProgress");
+        if (p) p.textContent = "Pairs " + memPairs + " of 7";
+        setBar($("memBar"), memPairs / 7);
+      }
+
+      function paintMemCard(idx, up, match) {
+        var grid = $("memGrid");
+        if (!grid) return;
+        var btn = grid.children[idx];
+        var c = memCards[idx];
+        if (!btn || !c) return;
+        btn.classList.toggle("is-up", !!up && !match);
+        btn.classList.toggle("is-match", !!match);
+        var face = btn.querySelector(".mem-face");
+        if (!face) return;
+        if (up || match) {
+          if (c.kind === "term") {
+            face.innerHTML = '<span class="mem-ico">' + art(c.key) + "</span><span>" + c.term + "</span>";
+            btn.setAttribute("aria-label", "Term: " + c.term);
+          } else {
+            face.innerHTML = '<span class="mem-def">' + c.definition + "</span>";
+            btn.setAttribute("aria-label", "Definition: " + c.definition);
+          }
+        } else {
+          face.innerHTML = "";
+          btn.setAttribute("aria-label", "Facedown memory card");
+        }
+      }
+
+      function flipMem(idx) {
+        if (memLock) return;
+        var c = memCards[idx];
+        if (!c) return;
+        var grid = $("memGrid");
+        var btn = grid && grid.children[idx];
+        if (!btn || btn.classList.contains("is-match") || btn.classList.contains("is-up")) return;
+        snd("tap");
+        paintMemCard(idx, true, false);
+        memFlip.push(idx);
+        if (memFlip.length < 2) return;
+        memLock = true;
+        var a = memCards[memFlip[0]];
+        var b = memCards[memFlip[1]];
+        if (a.pair === b.pair && a.kind !== b.kind) {
+          paintMemCard(memFlip[0], true, true);
+          paintMemCard(memFlip[1], true, true);
+          memPairs += 1;
+          updateMemProgress();
+          snd("spark");
+          buzz(true);
+          memFlip = [];
+          memLock = false;
+          if (memPairs >= 7) {
+            var g = $("memGrid");
+            var d = $("memDone");
+            var h = $("memHint");
+            if (g) g.style.display = "none";
+            if (h) h.style.display = "none";
+            if (d) d.hidden = false;
+            markDone("memory");
+            snd("win");
+            burstConfetti();
+          }
+        } else {
+          if (a.kind === "term") { memMiss[a.term] = true; noteWeakWord(a.term); }
+          if (b.kind === "term") { memMiss[b.term] = true; noteWeakWord(b.term); }
+          if (btn) btn.classList.add("wiggle");
+          snd("no");
+          buzz(false);
+          var keep = memFlip.slice();
+          setTimeout(function () {
+            paintMemCard(keep[0], false, false);
+            paintMemCard(keep[1], false, false);
+            var b0 = grid && grid.children[keep[0]];
+            var b1 = grid && grid.children[keep[1]];
+            if (b0) b0.classList.remove("wiggle");
+            if (b1) b1.classList.remove("wiggle");
+            memFlip = [];
+            memLock = false;
+          }, reduceMotion ? 80 : 700);
+        }
+      }
+
+      function finishMemory() {
+        goHome();
+      }
 
       /* ---------- Safety ---------- */
       function startSafety() {
         safetyGot = 0;
         scores.safetyGood = 0;
         scores.safetyBad = 0;
-        $("safetyDone").hidden = true;
-        $("safetyGrid").style.display = "grid";
-        $("safetyHint").style.display = "";
-        $("safetyFeedback").className = "feedback";
-        $("safetyFeedback").textContent = "";
+        var done = $("safetyDone");
+        var grid = $("safetyGrid");
+        var hint = $("safetyHint");
+        var fb = $("safetyFeedback");
+        if (done) done.hidden = true;
+        if (grid) grid.style.display = "grid";
+        if (hint) hint.style.display = "";
+        if (fb) { fb.className = "feedback"; fb.textContent = ""; }
         var pool = [];
         var i;
-        for (i = 0; i < SAFETY_REAL.length; i++) pool.push({ text: SAFETY_REAL[i], real: true });
-        for (i = 0; i < SAFETY_FAKE.length; i++) pool.push({ text: SAFETY_FAKE[i], real: false });
+        for (i = 0; i < SAFETY_REAL.length; i++) pool.push({ text: SAFETY_REAL[i].text, key: SAFETY_REAL[i].key, real: true });
+        for (i = 0; i < SAFETY_FAKE.length; i++) pool.push({ text: SAFETY_FAKE[i].text, key: SAFETY_FAKE[i].key, real: false });
         pool = shuffle(pool);
-        var grid = $("safetyGrid");
-        grid.innerHTML = "";
-        for (i = 0; i < pool.length; i++) {
-          var b = document.createElement("button");
-          b.type = "button";
-          b.className = "rule";
-          b.textContent = pool[i].text;
-          b.setAttribute("aria-label", (pool[i].real ? "Possible real rule: " : "Possible rule: ") + pool[i].text);
-          b.onclick = (function (btn, real) {
-            return function () { pickSafety(btn, real); };
-          })(b, pool[i].real);
-          grid.appendChild(b);
+        if (grid) {
+          grid.innerHTML = "";
+          for (i = 0; i < pool.length; i++) {
+            var b = document.createElement("button");
+            b.type = "button";
+            b.className = "rule";
+            b.innerHTML = '<span class="mini">' + ico(pool[i].key) + "</span><span>" + pool[i].text + "</span>";
+            b.setAttribute("aria-label", (pool[i].real ? "Possible real rule: " : "Possible rule: ") + pool[i].text);
+            b.onclick = (function (btn, real) {
+              return function () { pickSafety(btn, real); };
+            })(b, pool[i].real);
+            grid.appendChild(b);
+          }
+        }
+        var posters = $("safetyPosters");
+        if (posters) {
+          posters.innerHTML = "";
+          for (i = 0; i < SAFETY_REAL.length; i++) {
+            var d = document.createElement("div");
+            d.className = "poster";
+            d.innerHTML = '<div class="mini">' + ico(SAFETY_REAL[i].key) + "</div><strong>" + SAFETY_REAL[i].text + "</strong>";
+            posters.appendChild(d);
+          }
         }
         updateSafetyProgress();
-        var all = $("safetyAll");
-        all.innerHTML = "";
-        for (i = 0; i < SAFETY_REAL.length; i++) {
-          var li = document.createElement("li");
-          li.textContent = SAFETY_REAL[i];
-          all.appendChild(li);
-        }
         show("safety");
+        paintMute();
       }
-      window.startSafety = startSafety;
 
       function updateSafetyProgress() {
-        $("safetyProgress").textContent = "Find 4 real rules · " + safetyGot + " / " + safetyNeeded;
+        var p = $("safetyProgress");
+        if (p) p.textContent = "Find 4 real rules · " + safetyGot + " / " + safetyNeeded;
         setBar($("safetyBar"), safetyGot / safetyNeeded);
       }
 
       function pickSafety(btn, real) {
         if (safetyGot >= safetyNeeded) return;
-        if (btn.disabled) return;
+        if (!btn || btn.disabled) return;
         var fb = $("safetyFeedback");
         if (real) {
           btn.disabled = true;
           btn.classList.add("picked-good");
           safetyGot += 1;
           scores.safetyGood += 1;
-          fb.className = "feedback show ok";
-          fb.textContent = "Yes! That is a real lab rule.";
+          if (fb) { fb.className = "feedback show ok"; fb.textContent = "Yes! That is a real lab rule."; }
+          snd("ok");
+          buzz(true);
           updateSafetyProgress();
           if (safetyGot >= safetyNeeded) {
-            $("safetyGrid").style.display = "none";
-            $("safetyHint").style.display = "none";
-            $("safetyDone").hidden = false;
-            $("safetyDoneTitle").textContent = scores.safetyBad === 0
-              ? "You found 4 real rules — first try!"
-              : "You found 4 real rules!";
+            var grid = $("safetyGrid");
+            var hint = $("safetyHint");
+            var done = $("safetyDone");
+            var title = $("safetyDoneTitle");
+            if (grid) grid.style.display = "none";
+            if (hint) hint.style.display = "none";
+            if (done) done.hidden = false;
+            if (title) title.textContent = scores.safetyBad === 0 ? "You found 4 real rules — first try!" : "You found 4 real rules!";
+            markDone("safety");
+            snd("win");
+            burstConfetti();
           }
         } else {
           scores.safetyBad += 1;
           btn.classList.add("picked-bad", "wiggle");
           btn.disabled = true;
-          fb.className = "feedback show no";
-          fb.textContent = "Not a real rule. Keep looking — you can do it!";
+          if (fb) { fb.className = "feedback show no"; fb.textContent = "Not a real rule. Keep looking — you can do it!"; }
+          snd("no");
+          buzz(false);
           setTimeout(function () { btn.classList.remove("wiggle"); }, 400);
         }
       }
@@ -1004,94 +1987,380 @@
         if (playAll) startMethod();
         else goHome();
       }
-      window.finishSafety = finishSafety;
 
       /* ---------- Method ---------- */
+      function stairRow(n, text, lit) {
+        return '<div class="stair' + (lit ? " lit" : "") + '"><span class="num">' + n + "</span>" + (lit ? text : "...") + "</div>";
+      }
+
+      function arrowRow() {
+        return '<div class="stair-arrow" aria-hidden="true">' + ico("down") + "</div>";
+      }
+
+      function drawStairs(host, litCount, revealAll) {
+        if (!host) return;
+        var html = "";
+        var i, lit;
+        for (i = 0; i < METHOD.length; i++) {
+          lit = revealAll || i < litCount;
+          html += stairRow(i + 1, METHOD[i], lit);
+          if (i < METHOD.length - 1) html += arrowRow();
+        }
+        host.innerHTML = html;
+      }
+
       function startMethod() {
         methodNext = 0;
         scores.methodFirst = 0;
         scores.methodWrong = 0;
         methodTriedThis = false;
-        $("methodDone").hidden = true;
-        $("methodSteps").style.display = "grid";
-        $("methodList").innerHTML = "";
-        var final = $("methodFinal");
-        final.innerHTML = "";
-        var i;
-        for (i = 0; i < METHOD.length; i++) {
-          var li = document.createElement("li");
-          li.textContent = METHOD[i];
-          final.appendChild(li);
-        }
+        methodMiss = {};
+        var done = $("methodDone");
+        var steps = $("methodSteps");
+        var hint = $("methodHint");
+        if (done) done.hidden = true;
+        if (steps) steps.style.display = "grid";
+        if (hint) hint.style.display = "";
+        drawStairs($("methodStairs"), 0, false);
+        drawStairs($("methodFinal"), METHOD.length, true);
         var order = shuffle(METHOD);
-        var box = $("methodSteps");
-        box.innerHTML = "";
-        for (i = 0; i < order.length; i++) {
-          var b = document.createElement("button");
-          b.type = "button";
-          b.className = "step";
-          b.textContent = order[i];
-          b.setAttribute("aria-label", "Method step: " + order[i]);
-          b.onclick = (function (btn, text) {
-            return function () { pickMethod(btn, text); };
-          })(b, order[i]);
-          box.appendChild(b);
+        if (steps) {
+          steps.innerHTML = "";
+          var i, b;
+          for (i = 0; i < order.length; i++) {
+            b = document.createElement("button");
+            b.type = "button";
+            b.className = "step";
+            b.textContent = order[i];
+            b.setAttribute("aria-label", "Method step: " + order[i]);
+            b.onclick = (function (btn, text) {
+              return function () { pickMethod(btn, text); };
+            })(b, order[i]);
+            steps.appendChild(b);
+          }
         }
         updateMethodProgress();
         show("method");
+        paintMute();
       }
-      window.startMethod = startMethod;
 
       function updateMethodProgress() {
-        $("methodProgress").textContent = "Step " + methodNext + " of " + METHOD.length;
+        var p = $("methodProgress");
+        if (p) p.textContent = "Step " + methodNext + " of " + METHOD.length;
         setBar($("methodBar"), methodNext / METHOD.length);
       }
 
       function pickMethod(btn, text) {
         if (methodNext >= METHOD.length) return;
-        if (btn.classList.contains("used")) return;
+        if (!btn || btn.classList.contains("used")) return;
         if (text === METHOD[methodNext]) {
           if (!methodTriedThis) scores.methodFirst += 1;
           methodTriedThis = false;
           btn.classList.add("used");
           btn.disabled = true;
-          var li = document.createElement("li");
-          li.textContent = text;
-          $("methodList").appendChild(li);
           methodNext += 1;
+          drawStairs($("methodStairs"), methodNext, false);
           updateMethodProgress();
+          snd("ok");
+          buzz(true);
           if (methodNext >= METHOD.length) {
-            $("methodSteps").style.display = "none";
-            $("methodDone").hidden = false;
+            var steps = $("methodSteps");
+            var hint = $("methodHint");
+            var done = $("methodDone");
+            if (steps) steps.style.display = "none";
+            if (hint) hint.style.display = "none";
+            if (done) done.hidden = false;
+            drawStairs($("methodStairs"), METHOD.length, true);
+            markDone("method");
+            snd("win");
+            burstConfetti();
           }
         } else {
           scores.methodWrong += 1;
           methodTriedThis = true;
+          methodMiss[text] = true;
+          noteWeakStep(METHOD[methodNext]);
           btn.classList.add("wiggle");
+          snd("no");
+          buzz(false);
           setTimeout(function () { btn.classList.remove("wiggle"); }, 400);
         }
       }
 
       function finishMethod() {
+        if (playAll) startStory();
+        else goHome();
+      }
+
+      /* ---------- Story lab ---------- */
+      function storyScenes() {
+        return [
+          {
+            step: "Observe and Question",
+            kind: "Scene 1",
+            art: "ice1",
+            prompt: "You left ice cubes on the porch. Now the ice is gone. What happened?",
+            mode: "pick",
+            question: "What should you Observe first?",
+            choices: [
+              { text: "The ice is gone. What happened?", ok: true },
+              { text: "Skip looking and guess later.", ok: false },
+              { text: "The ice cubes ran away on purpose.", ok: false }
+            ]
+          },
+          {
+            step: "Research",
+            kind: "Scene 2",
+            art: "ice2",
+            prompt: "Do Research. Tap each true fact you find.",
+            mode: "facts",
+            facts: [
+              "Heat from the sun can melt ice.",
+              "Ice is frozen water.",
+              "Shade stays cooler than a sunny porch."
+            ]
+          },
+          {
+            step: "Hypothesis",
+            kind: "Scene 3",
+            art: "ice3",
+            prompt: "Make a Hypothesis — an educated guess.",
+            mode: "pick",
+            question: "Which Hypothesis fits what you know?",
+            choices: [
+              { text: "The sun’s heat melted the ice.", ok: true },
+              { text: "The ice cubes ran away.", ok: false },
+              { text: "Ice never melts outside.", ok: false }
+            ]
+          },
+          {
+            step: "Test",
+            kind: "Scene 4",
+            art: "ice4",
+            prompt: "What test would check that?",
+            mode: "pick",
+            question: "Pick the Experiment — an organized test to try and find a solution.",
+            choices: [
+              { text: "Put ice in the sun and ice in the shade. Observe which melts first.", ok: true },
+              { text: "Mix any two liquids and hope.", ok: false },
+              { text: "Guess again and stop.", ok: false }
+            ]
+          },
+          {
+            step: "Analyze",
+            kind: "Scene 5",
+            art: "ice5",
+            prompt: "Look at what happened.",
+            mode: "pick",
+            question: "What do you Analyze?",
+            choices: [
+              { text: "The ice in the sun melted; the ice in the shade lasted longer.", ok: true },
+              { text: "The ice in the shade melted first.", ok: false },
+              { text: "The ice never melted.", ok: false }
+            ]
+          },
+          {
+            step: "Reflect and Correct",
+            kind: "Scene 6",
+            art: "ice6",
+            prompt: "What would you change next time?",
+            mode: "pick",
+            question: "Reflect and Correct.",
+            choices: [
+              { text: "Try the Experiment again on a cloudy day and Observe.", ok: true },
+              { text: "Skip the Hypothesis next time.", ok: false },
+              { text: "Taste the puddle to check.", ok: false }
+            ]
+          }
+        ];
+      }
+
+      function startStory() {
+        storyIndex = 0;
+        storyAnswered = false;
+        storyFactGot = {};
+        storyMiss = {};
+        if (!playAll) {
+          scores.storyFirst = 0;
+          scores.storyWrong = 0;
+        }
+        var play = $("storyPlay");
+        var done = $("storyDone");
+        if (play) play.hidden = false;
+        if (done) done.hidden = true;
+        renderStory();
+        show("story");
+        paintMute();
+      }
+
+      function renderStory() {
+        var scenes = storyScenes();
+        var s = scenes[storyIndex];
+        if (!s) return;
+        storyAnswered = false;
+        var artEl = $("storyArt");
+        var kind = $("storyKind");
+        var prompt = $("storyPrompt");
+        var fb = $("storyFeedback");
+        var badge = $("storyBadge");
+        var nextRow = $("storyNextRow");
+        if (artEl) artEl.innerHTML = ico(s.art);
+        if (kind) kind.textContent = s.question || s.kind;
+        if (prompt) prompt.textContent = s.prompt;
+        if (fb) { fb.className = "feedback"; fb.textContent = ""; }
+        if (badge) { badge.className = "step-badge"; badge.textContent = ""; }
+        if (nextRow) nextRow.style.display = "none";
+        var prog = $("storyProgress");
+        if (prog) prog.textContent = "Scene " + (storyIndex + 1) + " of 6";
+        setBar($("storyBar"), storyIndex / 6);
+        var box = $("storyChoices");
+        if (!box) return;
+        box.innerHTML = "";
+        if (s.mode === "facts") {
+          if (kind) kind.textContent = s.kind + " · tap every fact";
+          var i, b;
+          for (i = 0; i < s.facts.length; i++) {
+            b = document.createElement("button");
+            b.type = "button";
+            b.className = "choice";
+            b.textContent = s.facts[i];
+            b.setAttribute("aria-label", "Fact: " + s.facts[i]);
+            b.onclick = (function (btn, idx) {
+              return function () { pickStoryFact(btn, idx, s); };
+            })(b, i);
+            box.appendChild(b);
+          }
+        } else {
+          if (kind) kind.textContent = s.kind;
+          var opts = shuffle(s.choices);
+          var j, c, btn;
+          for (j = 0; j < opts.length; j++) {
+            c = opts[j];
+            btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "choice";
+            btn.textContent = c.text;
+            btn.setAttribute("aria-label", "Choice: " + c.text);
+            btn.onclick = (function (choice) {
+              return function () { pickStoryChoice(choice, s); };
+            })(c);
+            box.appendChild(btn);
+          }
+        }
+      }
+
+      function revealStep(s) {
+        var badge = $("storyBadge");
+        if (badge) {
+          badge.className = "step-badge show pop";
+          badge.textContent = "Official step: " + s.step;
+        }
+        var nextRow = $("storyNextRow");
+        if (nextRow) nextRow.style.display = "flex";
+        var nb = $("storyNextBtn");
+        if (nb) nb.textContent = storyIndex >= 5 ? "Finish" : "Next scene";
+        setBar($("storyBar"), (storyIndex + 1) / 6);
+      }
+
+      function pickStoryFact(btn, idx, s) {
+        if (storyAnswered) return;
+        if (!btn || btn.disabled) return;
+        btn.disabled = true;
+        btn.classList.add("correct");
+        storyFactGot[idx] = true;
+        snd("ok");
+        buzz(true);
+        var n = 0, k;
+        for (k in storyFactGot) if (storyFactGot.hasOwnProperty(k)) n += 1;
+        var fb = $("storyFeedback");
+        if (fb) { fb.className = "feedback show ok"; fb.textContent = "True fact. Keep going."; }
+        if (n >= s.facts.length) {
+          storyAnswered = true;
+          scores.storyFirst += 1;
+          revealStep(s);
+        }
+      }
+
+      function pickStoryChoice(choice, s) {
+        if (storyAnswered) return;
+        var box = $("storyChoices");
+        if (!box) return;
+        var buttons = box.querySelectorAll(".choice");
+        var i;
+        if (choice.ok) {
+          storyAnswered = true;
+          if (!storyMiss[s.step]) scores.storyFirst += 1;
+          for (i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (buttons[i].textContent === choice.text) buttons[i].classList.add("correct");
+          }
+          var fb = $("storyFeedback");
+          if (fb) { fb.className = "feedback show ok"; fb.textContent = "Yes. That fits."; }
+          snd("ok");
+          buzz(true);
+          revealStep(s);
+        } else {
+          scores.storyWrong += 1;
+          storyMiss[s.step] = true;
+          noteWeakStep(s.step);
+          for (i = 0; i < buttons.length; i++) {
+            if (buttons[i].textContent === choice.text) {
+              buttons[i].classList.add("wrong", "wiggle");
+              buttons[i].disabled = true;
+            }
+          }
+          var fb2 = $("storyFeedback");
+          if (fb2) { fb2.className = "feedback show no"; fb2.textContent = "Try another idea."; }
+          snd("no");
+          buzz(false);
+        }
+      }
+
+      function nextStory() {
+        snd("tap");
+        storyIndex += 1;
+        storyFactGot = {};
+        if (storyIndex >= 6) {
+          endStory();
+        } else {
+          renderStory();
+        }
+      }
+
+      function endStory() {
+        var play = $("storyPlay");
+        var done = $("storyDone");
+        if (play) play.hidden = true;
+        if (done) done.hidden = false;
+        var title = $("storyDoneTitle");
+        if (title) title.textContent = scores.storyWrong === 0 ? "Mystery solved — first try!" : "Mystery solved!";
+        markDone("story");
+        snd("win");
+        burstConfetti();
+      }
+
+      function finishStory() {
         if (playAll) showResults();
         else goHome();
       }
-      window.finishMethod = finishMethod;
 
       /* ---------- Play all ---------- */
       function startPlayAll() {
         playAll = true;
-        scores = { vocabFirst: 0, vocabTotal: 0, safetyGood: 0, safetyBad: 0, methodFirst: 0, methodWrong: 0 };
+        scores = blankScores();
+        weakWords = [];
+        weakSteps = [];
         startVocab();
       }
-      window.startPlayAll = startPlayAll;
 
       function showResults() {
+        playAll = false;
         var vocabPts = scores.vocabFirst;
         var safetyPts = scores.safetyBad === 0 ? 4 : Math.max(2, 4 - scores.safetyBad);
         var methodPts = scores.methodFirst;
-        var earned = vocabPts + safetyPts + methodPts;
-        var possible = 7 + 4 + 6;
+        var storyPts = scores.storyFirst;
+        var earned = vocabPts + safetyPts + methodPts + storyPts;
+        var possible = 7 + 4 + 6 + 6;
         var pct = earned / possible;
         var stars = 1;
         if (pct >= 0.9) stars = 5;
@@ -1099,23 +2368,44 @@
         else if (pct >= 0.55) stars = 3;
         else if (pct >= 0.35) stars = 2;
         var titles = ["You finished the quest!", "Great start!", "Nice job, scientist!", "Super work!", "Amazing scientist!", "Lab legend!"];
-        $("resultsTitle").textContent = titles[stars];
+        var title = $("resultsTitle");
+        if (title) title.textContent = titles[stars];
         var starStr = "";
-        for (var i = 0; i < 5; i++) starStr += i < stars ? "⭐" : "☆";
-        $("resultsStars").textContent = starStr;
-        $("resultsStars").setAttribute("aria-label", stars + " out of 5 stars");
-        $("resultsText").textContent = "You earned " + stars + " of 5 stars. Keep practicing for Friday!";
-        $("resultsBreak").innerHTML =
-          "<li>Vocab: " + vocabPts + " of 7 first-try</li>" +
-          "<li>Lab safety: 4 real rules found" + (scores.safetyBad ? " (a few mix-ups — that’s okay!)" : " with no mix-ups") + "</li>" +
-          "<li>Scientific method: " + methodPts + " of 6 first-try</li>";
+        var i;
+        for (i = 0; i < 5; i++) starStr += (i < stars) ? "★" : "☆";
+        var starsEl = $("resultsStars");
+        if (starsEl) {
+          starsEl.textContent = starStr;
+          starsEl.setAttribute("aria-label", stars + " out of 5 stars");
+        }
+        var text = $("resultsText");
+        if (text) text.textContent = "You earned " + stars + " of 5 stars. Keep practicing for Friday!";
+        var br = $("resultsBreak");
+        if (br) {
+          br.innerHTML =
+            "<li>Vocab: " + vocabPts + " of 7 first-try</li>" +
+            "<li>Lab safety: 4 real rules found" + (scores.safetyBad ? " (a few mix-ups — that’s okay!)" : " with no mix-ups") + "</li>" +
+            "<li>Scientific method: " + methodPts + " of 6 first-try</li>" +
+            "<li>Story lab: " + storyPts + " of 6 scenes first-try</li>";
+        }
+        var parent = $("resultsParent");
+        if (parent) {
+          var bits = [];
+          if (weakWords.length) bits.push("words: " + weakWords.join(", "));
+          if (weakSteps.length) bits.push("steps: " + weakSteps.join(", "));
+          parent.textContent = bits.length
+            ? "PARENT: Drill these — " + bits.join(". ") + "."
+            : "PARENT: No weak spots this run — keep a quick review before Friday.";
+        }
+        markDone("vocab");
+        markDone("safety");
+        markDone("method");
+        markDone("story");
         show("results");
+        paintMute();
+        snd("win");
+        burstConfetti();
       }
-
-      window.startFlashcards = startFlashcards;
-      window.startVocab = startVocab;
-      window.startSafety = startSafety;
-      window.startMethod = startMethod;
 
       function lockMobileView() {
         var viewport = document.querySelector('meta[name="viewport"]');
@@ -1150,7 +2440,56 @@
           }
         } catch (err) {}
       }
-      lockMobileView();
+
+      function onReady() {
+        reduceMotion = prefersReduce();
+        loadMute();
+        renderHome();
+        paintMute();
+        lockMobileView();
+        if (window.speechSynthesis) {
+          speechSynthesis.onvoiceschanged = function () {};
+        }
+        document.addEventListener("click", function (e) {
+          var t = e.target;
+          if (!t) return;
+          var homeBtn = t.closest ? t.closest("[data-act='home']") : null;
+          var muteBtn = t.closest ? t.closest("[data-act='mute']") : null;
+          var modeBtn = t.closest ? t.closest("[data-mode]") : null;
+          if (homeBtn) { snd("tap"); goHome(); }
+          else if (muteBtn || (t.closest && t.closest("#muteHome"))) toggleMute();
+          else if (modeBtn) startMode(modeBtn.getAttribute("data-mode"));
+        });
+        var flip = $("flipCard");
+        if (flip) flip.addEventListener("click", flipCard);
+        var fb = $("flashBack");
+        if (fb) fb.addEventListener("click", function () { flashNav(-1); });
+        var fn = $("flashNext");
+        if (fn) fn.addEventListener("click", function () { flashNav(1); });
+        var sp = $("speakBtn");
+        if (sp) sp.addEventListener("click", function () { snd("tap"); speakVisible(); });
+        var vn = $("vocabNextBtn");
+        if (vn) vn.addEventListener("click", nextVocab);
+        var vr = $("vocabRetryBtn");
+        if (vr) vr.addEventListener("click", retryMissedVocab);
+        var vd = $("vocabDoneBtn");
+        if (vd) vd.addEventListener("click", finishVocab);
+        var md = $("memDoneBtn");
+        if (md) md.addEventListener("click", finishMemory);
+        var sd = $("safetyDoneBtn");
+        if (sd) sd.addEventListener("click", finishSafety);
+        var xd = $("methodDoneBtn");
+        if (xd) xd.addEventListener("click", finishMethod);
+        var sn = $("storyNextBtn");
+        if (sn) sn.addEventListener("click", nextStory);
+        var sdb = $("storyDoneBtn");
+        if (sdb) sdb.addEventListener("click", finishStory);
+        var pa = $("playAgainBtn");
+        if (pa) pa.addEventListener("click", function () { snd("tap"); startPlayAll(); });
+      }
+
+      if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", onReady);
+      else onReady();
     })();
   </script>
 </body>
