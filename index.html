@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Science Quest">
   <meta name="theme-color" content="#0B7A75">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="HandheldFriendly" content="true">
+  <meta name="MobileOptimized" content="width">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="x5-orientation" content="portrait">
   <meta name="description" content="Unit 1 Science Quest — What is Science?">
+  <link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Science%20Quest%22%2C%22short_name%22%3A%22Science%20Quest%22%2C%22display%22%3A%22standalone%22%2C%22orientation%22%3A%22portrait%22%2C%22start_url%22%3A%22.%22%2C%22background_color%22%3A%22%23E8F6F4%22%2C%22theme_color%22%3A%22%230B7A75%22%7D">
   <title>Science Quest</title>
   <style>
     :root {
@@ -36,7 +42,12 @@
 
     * { box-sizing: border-box; }
     html, body { margin: 0; padding: 0; }
-    html { -webkit-text-size-adjust: 100%; }
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background:
@@ -51,9 +62,17 @@
       padding-right: var(--safe-right);
       padding-bottom: var(--safe-bottom);
       padding-left: var(--safe-left);
+      width: 100%;
+      height: 100%;
+      height: 100dvh;
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: none;
+      touch-action: pan-y;
+      -webkit-overflow-scrolling: touch;
     }
 
-    button, a {
+    button, a, input, textarea {
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
     }
@@ -61,9 +80,29 @@
     h1, h2, h3 { margin: 0; line-height: 1.2; }
 
     .wrap {
-      width: min(560px, 100%);
+      width: 100%;
+      max-width: 430px;
       margin: 0 auto;
       padding: 16px 16px 40px;
+    }
+
+    .rotate-gate {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #06514E;
+      color: #fff;
+      place-items: center;
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .rotate-gate span { font-size: 48px; display: block; margin-bottom: 12px; }
+    @media screen and (orientation: landscape) and (max-height: 520px) {
+      .rotate-gate { display: grid; }
+      .wrap { visibility: hidden; }
     }
 
     .screen { display: none; }
@@ -438,6 +477,9 @@
   </style>
 </head>
 <body>
+  <div class="rotate-gate" id="rotateGate" aria-hidden="true">
+    <div><span>📱</span>Turn the phone upright</div>
+  </div>
   <div class="wrap">
     <section id="home" class="screen active" aria-label="Home">
       <div class="brand">
@@ -1073,6 +1115,21 @@
       window.startVocab = startVocab;
       window.startSafety = startSafety;
       window.startMethod = startMethod;
+
+      function lockMobileView() {
+        ["gesturestart", "gesturechange", "gestureend"].forEach(function (evt) {
+          document.addEventListener(evt, function (e) { e.preventDefault(); }, { passive: false });
+        });
+        document.addEventListener("touchmove", function (e) {
+          if (e.touches && e.touches.length > 1) e.preventDefault();
+        }, { passive: false });
+        try {
+          if (screen.orientation && screen.orientation.lock) {
+            screen.orientation.lock("portrait").catch(function () {});
+          }
+        } catch (err) {}
+      }
+      lockMobileView();
     })();
   </script>
 </body>
