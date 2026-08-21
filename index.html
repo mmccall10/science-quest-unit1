@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Science Quest">
+  <meta name="theme-color" content="#0B7A75">
+  <meta name="description" content="Unit 1 Science Quest — What is Science?">
+  <title>Science Quest</title>
+  <style>
+    :root {
+      --teal: #0B7A75;
+      --teal-dark: #06514E;
+      --teal-soft: #D4F1EE;
+      --gold: #F4B400;
+      --gold-deep: #C48A00;
+      --sky: #E8F6F4;
+      --cream: #FFF8E8;
+      --card: #FFFFFF;
+      --ink: #142422;
+      --ink-soft: #3A4F4C;
+      --ok: #1B7A3D;
+      --ok-bg: #D8F3E2;
+      --try: #C05621;
+      --try-bg: #FFE8D6;
+      --line: #B7D4D0;
+      --shadow: 0 8px 24px rgba(11, 122, 117, 0.14);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 500px at 10% -10%, #FFF3C4 0%, transparent 55%),
+        radial-gradient(900px 420px at 110% 0%, #B8EFE8 0%, transparent 50%),
+        linear-gradient(180deg, var(--sky) 0%, var(--cream) 100%);
+      color: var(--ink);
+      min-height: 100dvh;
+      font-size: 17px;
+      line-height: 1.45;
+      padding-top: var(--safe-top);
+      padding-right: var(--safe-right);
+      padding-bottom: var(--safe-bottom);
+      padding-left: var(--safe-left);
+    }
+
+    button, a {
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1, h2, h3 { margin: 0; line-height: 1.2; }
+
+    .wrap {
+      width: min(560px, 100%);
+      margin: 0 auto;
+      padding: 16px 16px 40px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .brand {
+      text-align: center;
+      padding: 12px 8px 4px;
+    }
+    .beaker {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 10px;
+      border-radius: 20px;
+      background: linear-gradient(160deg, #13A39C, #0B7A75);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 36px;
+      box-shadow: var(--shadow);
+    }
+    .brand h1 {
+      font-size: 32px;
+      color: var(--teal-dark);
+      letter-spacing: -0.03em;
+    }
+    .brand .sub {
+      margin-top: 6px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+    .brand .test-note {
+      margin: 10px auto 0;
+      display: inline-block;
+      background: #FFF;
+      border: 2px solid var(--gold);
+      color: #7A5600;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .menu {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .mode-btn {
+      min-height: 64px;
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: var(--card);
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 17px;
+    }
+    .mode-btn:focus-visible,
+    .btn:focus-visible {
+      outline: 3px solid var(--gold);
+      outline-offset: 3px;
+    }
+    .mode-btn .icon {
+      width: 48px;
+      height: 48px;
+      min-width: 48px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      background: var(--teal-soft);
+    }
+    .mode-btn strong { display: block; font-size: 19px; }
+    .mode-btn span { display: block; color: var(--ink-soft); font-size: 16px; margin-top: 2px; }
+    .mode-btn.playall {
+      background: linear-gradient(135deg, #0B7A75, #0E9A7A);
+      color: #fff;
+    }
+    .mode-btn.playall span { color: #E8FFF8; }
+    .mode-btn.playall .icon { background: rgba(255,255,255,0.18); }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .topbar h2 {
+      flex: 1;
+      font-size: 22px;
+      color: var(--teal-dark);
+    }
+    .progress {
+      margin: 0 0 14px;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--teal);
+    }
+    .bar {
+      height: 10px;
+      background: #fff;
+      border: 2px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .bar > i {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, #13A39C, #F4B400);
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .btn {
+      min-height: 48px;
+      min-width: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #fff;
+      color: var(--teal-dark);
+      box-shadow: 0 3px 0 #C9DED9;
+    }
+    .btn.primary {
+      background: var(--teal);
+      color: #fff;
+      box-shadow: 0 3px 0 var(--teal-dark);
+    }
+    .btn.gold {
+      background: var(--gold);
+      color: #3D2C00;
+      box-shadow: 0 3px 0 var(--gold-deep);
+    }
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+      border: 2px solid var(--line);
+    }
+    .btn-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .btn-row .btn { flex: 1; }
+
+    .card-stage { perspective: 1000px; }
+    .flip-card {
+      min-height: 240px;
+      position: relative;
+      cursor: pointer;
+      border: 0;
+      width: 100%;
+      background: transparent;
+      padding: 0;
+    }
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      min-height: 240px;
+      transition: transform 0.45s;
+      transform-style: preserve-3d;
+    }
+    .flip-card.is-flipped .flip-inner { transform: rotateY(180deg); }
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 18px;
+      text-align: center;
+      border: 3px solid var(--teal);
+    }
+    .face.back {
+      transform: rotateY(180deg);
+      border-color: var(--gold);
+      background: #FFFBEA;
+    }
+    .face .tag {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+    .face.back .tag { color: var(--gold-deep); }
+    .face .term { font-size: 34px; font-weight: 800; color: var(--teal-dark); }
+    .face .def { font-size: 22px; font-weight: 700; color: var(--ink); }
+
+    .hint {
+      text-align: center;
+      color: var(--ink-soft);
+      font-size: 16px;
+      margin: 10px 0 0;
+    }
+
+    .prompt-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--teal);
+      margin-bottom: 14px;
+    }
+    .prompt-box .kind {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--teal);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .prompt-box p {
+      margin: 8px 0 0;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .choices { display: grid; gap: 10px; }
+    .choice {
+      min-height: 56px;
+      width: 100%;
+      text-align: left;
+      border: 2px solid var(--line);
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .choice.correct {
+      background: var(--ok-bg);
+      border-color: var(--ok);
+      color: #0E4A24;
+    }
+    .choice.wrong {
+      background: var(--try-bg);
+      border-color: var(--try);
+      color: #6A2E10;
+    }
+    .choice:disabled { cursor: default; }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-weight: 700;
+      display: none;
+    }
+    .feedback.show { display: block; }
+    .feedback.ok { background: var(--ok-bg); color: #0E4A24; }
+    .feedback.no { background: var(--try-bg); color: #6A2E10; }
+
+    .safety-grid { display: grid; gap: 10px; }
+    .rule {
+      min-height: 52px;
+      width: 100%;
+      text-align: left;
+      border: 2px solid var(--line);
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 17px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .rule.picked-good {
+      background: var(--ok-bg);
+      border-color: var(--ok);
+      color: #0E4A24;
+    }
+    .rule.picked-bad {
+      background: var(--try-bg);
+      border-color: var(--try);
+      color: #6A2E10;
+    }
+    .rule.wiggle { animation: wiggle 0.4s ease; }
+    .step.wiggle { animation: wiggle 0.4s ease; }
+
+    @keyframes wiggle {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+
+    .chain {
+      min-height: 72px;
+      background: #fff;
+      border: 3px dashed var(--line);
+      border-radius: 16px;
+      padding: 10px;
+      margin-bottom: 14px;
+    }
+    .chain ol {
+      margin: 0;
+      padding-left: 22px;
+    }
+    .chain li {
+      font-weight: 800;
+      color: var(--teal-dark);
+      margin: 4px 0;
+    }
+    .steps { display: grid; gap: 10px; }
+    .step {
+      min-height: 52px;
+      width: 100%;
+      border: 2px solid var(--teal);
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--teal-dark);
+      cursor: pointer;
+    }
+    .step.used {
+      opacity: 0.4;
+      background: var(--teal-soft);
+    }
+
+    .done-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 18px 16px;
+      box-shadow: var(--shadow);
+      border: 3px solid var(--gold);
+    }
+    .done-box h3 { color: var(--teal-dark); font-size: 24px; }
+    .done-box ul, .done-box ol { margin: 10px 0 0; padding-left: 22px; }
+    .done-box li { margin: 6px 0; font-weight: 700; }
+    .stars {
+      font-size: 36px;
+      letter-spacing: 4px;
+      text-align: center;
+      margin: 8px 0 12px;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section id="home" class="screen active" aria-label="Home">
+      <div class="brand">
+        <div class="beaker" aria-hidden="true">🔬</div>
+        <h1>Science Quest</h1>
+        <p class="sub">Unit 1 · What is Science?</p>
+        <p class="test-note">Test Friday, August 21, 2026</p>
+      </div>
+      <div class="menu">
+        <button class="mode-btn playall" type="button" onclick="startPlayAll()">
+          <span class="icon" aria-hidden="true">⭐</span>
+          <span><strong>Play all</strong><span>Vocab, safety, then method</span></span>
+        </button>
+        <button class="mode-btn" type="button" onclick="startFlashcards()">
+          <span class="icon" aria-hidden="true">🃏</span>
+          <span><strong>Flashcards</strong><span>Tap to flip term and definition</span></span>
+        </button>
+        <button class="mode-btn" type="button" onclick="startVocab()">
+          <span class="icon" aria-hidden="true">🧠</span>
+          <span><strong>Vocab quiz</strong><span>Pick the matching word or meaning</span></span>
+        </button>
+        <button class="mode-btn" type="button" onclick="startSafety()">
+          <span class="icon" aria-hidden="true">🧪</span>
+          <span><strong>Lab safety</strong><span>Tap 4 real lab rules</span></span>
+        </button>
+        <button class="mode-btn" type="button" onclick="startMethod()">
+          <span class="icon" aria-hidden="true">🔗</span>
+          <span><strong>Method mix-up</strong><span>Put the 6 steps in order</span></span>
+        </button>
+      </div>
+    </section>
+
+    <section id="flash" class="screen" aria-label="Flashcards">
+      <div class="topbar">
+        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <h2>Flashcards</h2>
+        <button class="btn gold" type="button" id="speakBtn" onclick="speakVisible()" aria-label="Read the card out loud">🔊</button>
+      </div>
+      <p class="progress" id="flashProgress">Card 1 of 7</p>
+      <div class="bar" aria-hidden="true"><i id="flashBar"></i></div>
+      <div class="card-stage">
+        <button class="flip-card" id="flipCard" type="button" onclick="flipCard()" aria-label="Flip flashcard">
+          <div class="flip-inner">
+            <div class="face front">
+              <div class="tag">Term</div>
+              <div class="term" id="flashTerm"></div>
+            </div>
+            <div class="face back">
+              <div class="tag">Definition</div>
+              <div class="def" id="flashDef"></div>
+            </div>
+          </div>
+        </button>
+      </div>
+      <p class="hint">Tap the card to flip. Use the speaker to hear it.</p>
+      <div class="btn-row">
+        <button class="btn" type="button" onclick="flashNav(-1)" aria-label="Previous card">◀ Back</button>
+        <button class="btn primary" type="button" onclick="flashNav(1)" aria-label="Next card">Next ▶</button>
+      </div>
+    </section>
+
+    <section id="vocab" class="screen" aria-label="Vocab quiz">
+      <div class="topbar">
+        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <h2>Vocab quiz</h2>
+      </div>
+      <p class="progress" id="vocabProgress">Question 1 of 7</p>
+      <div class="bar" aria-hidden="true"><i id="vocabBar"></i></div>
+      <div id="vocabPlay">
+        <div class="prompt-box">
+          <div class="kind" id="vocabKind"></div>
+          <p id="vocabPrompt"></p>
+        </div>
+        <div class="choices" id="vocabChoices"></div>
+        <div class="feedback" id="vocabFeedback" role="status"></div>
+        <div class="btn-row" id="vocabNextRow" style="display:none">
+          <button class="btn primary" type="button" onclick="nextVocab()">Next</button>
+        </div>
+      </div>
+      <div id="vocabDone" class="done-box" hidden>
+        <h3 id="vocabDoneTitle">Nice work!</h3>
+        <p id="vocabDoneText"></p>
+        <div class="btn-row">
+          <button class="btn gold" type="button" id="vocabRetryBtn" onclick="retryMissedVocab()">Retry missed</button>
+          <button class="btn primary" type="button" onclick="finishVocab()">Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="safety" class="screen" aria-label="Lab safety">
+      <div class="topbar">
+        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <h2>Lab safety</h2>
+      </div>
+      <p class="progress" id="safetyProgress">Find 4 real rules · 0 / 4</p>
+      <div class="bar" aria-hidden="true"><i id="safetyBar"></i></div>
+      <p class="hint" id="safetyHint">Tap the rules that are real. The test asks you to name 4.</p>
+      <div class="safety-grid" id="safetyGrid"></div>
+      <div class="feedback" id="safetyFeedback" role="status"></div>
+      <div id="safetyDone" class="done-box" hidden style="margin-top:14px">
+        <h3 id="safetyDoneTitle">You found 4 real rules!</h3>
+        <p>Memorize all 9 for the test. You only need to name 4, but knowing all of them is extra cool.</p>
+        <ol id="safetyAll"></ol>
+        <div class="btn-row">
+          <button class="btn primary" type="button" onclick="finishSafety()">Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="method" class="screen" aria-label="Method mix-up">
+      <div class="topbar">
+        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <h2>Method mix-up</h2>
+      </div>
+      <p class="progress" id="methodProgress">Step 0 of 6</p>
+      <div class="bar" aria-hidden="true"><i id="methodBar"></i></div>
+      <p class="hint">Tap the steps in the right order to build the chain.</p>
+      <div class="chain" id="methodChain" aria-live="polite">
+        <ol id="methodList"></ol>
+      </div>
+      <div class="steps" id="methodSteps"></div>
+      <div id="methodDone" class="done-box" hidden style="margin-top:14px">
+        <h3>You built the method!</h3>
+        <p>Here is the scientific method in the exact test order:</p>
+        <ol id="methodFinal"></ol>
+        <div class="btn-row">
+          <button class="btn primary" type="button" onclick="finishMethod()">Done</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="screen" aria-label="Play all results">
+      <div class="topbar">
+        <button class="btn ghost" type="button" onclick="goHome()" aria-label="Back to home">Home</button>
+        <h2>Quest complete</h2>
+      </div>
+      <div class="done-box">
+        <h3 id="resultsTitle">Amazing scientist!</h3>
+        <div class="stars" id="resultsStars" aria-hidden="true"></div>
+        <p id="resultsText"></p>
+        <ul id="resultsBreak"></ul>
+        <div class="btn-row">
+          <button class="btn gold" type="button" onclick="startPlayAll()">Play again</button>
+          <button class="btn primary" type="button" onclick="goHome()">Home</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    (function () {
+      var VOCAB = [
+        { term: "Design", definition: "To think and plan in order to create." },
+        { term: "Science", definition: "The study of the natural world through observation and experimentation." },
+        { term: "Scientist", definition: "The people who explore science." },
+        { term: "Engineer", definition: "Someone who uses math and science to solve problems." },
+        { term: "Observe", definition: "To watch carefully." },
+        { term: "Experiment", definition: "An organized test to try and find a solution." },
+        { term: "Hypothesis", definition: "An educated guess." }
+      ];
+
+      var SAFETY_REAL = [
+        "Behave responsibly",
+        "Follow all instructions",
+        "No eating or drinking",
+        "Dispose of waste as directed",
+        "Wear protective gear",
+        "Report accidents immediately",
+        "Know emergency procedures",
+        "Check equipment before use",
+        "Don’t leave a flame unattended"
+      ];
+
+      var SAFETY_FAKE = [
+        "Run in the lab",
+        "Taste chemicals",
+        "Wear flip-flops",
+        "Mix any two liquids"
+      ];
+
+      var METHOD = [
+        "Observe and Question",
+        "Research",
+        "Hypothesis",
+        "Test",
+        "Analyze",
+        "Reflect and Correct"
+      ];
+
+      var playAll = false;
+      var scores = { vocabFirst: 0, vocabTotal: 0, safetyGood: 0, safetyBad: 0, methodFirst: 0, methodWrong: 0 };
+
+      var flashOrder = [];
+      var flashIndex = 0;
+      var flashFlipped = false;
+
+      var vocabQueue = [];
+      var vocabIndex = 0;
+      var vocabMissed = [];
+      var vocabAnswered = false;
+      var vocabRetrying = false;
+
+      var safetyNeeded = 4;
+      var safetyGot = 0;
+
+      var methodNext = 0;
+      var methodTriedThis = false;
+
+      function $(id) { return document.getElementById(id); }
+
+      function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+      }
+
+      function show(id) {
+        var screens = document.querySelectorAll(".screen");
+        for (var i = 0; i < screens.length; i++) screens[i].classList.remove("active");
+        $(id).classList.add("active");
+        window.scrollTo(0, 0);
+      }
+
+      function setBar(el, frac) {
+        el.style.width = Math.max(0, Math.min(1, frac)) * 100 + "%";
+      }
+
+      function goHome() {
+        playAll = false;
+        if (window.speechSynthesis) speechSynthesis.cancel();
+        show("home");
+      }
+
+      window.goHome = goHome;
+
+      /* ---------- Flashcards ---------- */
+      function startFlashcards() {
+        flashOrder = shuffle(VOCAB);
+        flashIndex = 0;
+        renderFlash();
+        show("flash");
+      }
+      window.startFlashcards = startFlashcards;
+
+      function renderFlash() {
+        var item = flashOrder[flashIndex];
+        flashFlipped = false;
+        $("flipCard").classList.remove("is-flipped");
+        $("flashTerm").textContent = item.term;
+        $("flashDef").textContent = item.definition;
+        $("flashProgress").textContent = "Card " + (flashIndex + 1) + " of " + flashOrder.length;
+        setBar($("flashBar"), (flashIndex + 1) / flashOrder.length);
+        $("flipCard").setAttribute("aria-label", "Flashcard: " + item.term + ". Tap to flip.");
+      }
+
+      function flipCard() {
+        flashFlipped = !flashFlipped;
+        $("flipCard").classList.toggle("is-flipped", flashFlipped);
+      }
+      window.flipCard = flipCard;
+
+      function flashNav(dir) {
+        flashIndex = (flashIndex + dir + flashOrder.length) % flashOrder.length;
+        renderFlash();
+      }
+      window.flashNav = flashNav;
+
+      function speakVisible() {
+        if (!window.speechSynthesis) return;
+        var item = flashOrder[flashIndex];
+        var text = flashFlipped ? item.definition : item.term;
+        speechSynthesis.cancel();
+        var u = new SpeechSynthesisUtterance(text);
+        u.lang = "en-US";
+        u.rate = 0.9;
+        u.pitch = 1.05;
+        var voices = speechSynthesis.getVoices();
+        for (var i = 0; i < voices.length; i++) {
+          if (voices[i].lang && voices[i].lang.indexOf("en-US") === 0) {
+            u.voice = voices[i];
+            break;
+          }
+        }
+        speechSynthesis.speak(u);
+      }
+      window.speakVisible = speakVisible;
+      if (window.speechSynthesis) {
+        speechSynthesis.onvoiceschanged = function () {};
+      }
+
+      /* ---------- Vocab ---------- */
+      function buildVocabQueue(list) {
+        var items = shuffle(list);
+        var q = [];
+        for (var i = 0; i < items.length; i++) {
+          var type = (i % 2 === 0) ? "def2term" : "term2def";
+          if (Math.random() < 0.5 && items.length > 1) {
+            type = type === "def2term" ? "term2def" : "def2term";
+          }
+          q.push({ item: items[i], type: type });
+        }
+        return q;
+      }
+
+      function startVocab() {
+        vocabQueue = buildVocabQueue(VOCAB);
+        vocabIndex = 0;
+        vocabMissed = [];
+        vocabRetrying = false;
+        if (!playAll) scores.vocabFirst = 0;
+        scores.vocabTotal = 0;
+        $("vocabPlay").hidden = false;
+        $("vocabDone").hidden = true;
+        renderVocab();
+        show("vocab");
+      }
+      window.startVocab = startVocab;
+
+      function otherTerms(except) {
+        var out = [];
+        for (var i = 0; i < VOCAB.length; i++) {
+          if (VOCAB[i].term !== except.term) out.push(VOCAB[i]);
+        }
+        return shuffle(out);
+      }
+
+      function renderVocab() {
+        var q = vocabQueue[vocabIndex];
+        vocabAnswered = false;
+        $("vocabNextRow").style.display = "none";
+        var fb = $("vocabFeedback");
+        fb.className = "feedback";
+        fb.textContent = "";
+        $("vocabProgress").textContent = "Question " + (vocabIndex + 1) + " of " + vocabQueue.length;
+        setBar($("vocabBar"), vocabIndex / vocabQueue.length);
+
+        var choices = [];
+        var correct;
+        if (q.type === "def2term") {
+          $("vocabKind").textContent = "Which word matches this meaning?";
+          $("vocabPrompt").textContent = q.item.definition;
+          correct = q.item.term;
+          choices.push(correct);
+          var others = otherTerms(q.item);
+          for (var i = 0; i < 3 && i < others.length; i++) choices.push(others[i].term);
+        } else {
+          $("vocabKind").textContent = "What does this word mean?";
+          $("vocabPrompt").textContent = q.item.term;
+          correct = q.item.definition;
+          choices.push(correct);
+          var others2 = otherTerms(q.item);
+          for (var j = 0; j < 3 && j < others2.length; j++) choices.push(others2[j].definition);
+        }
+        choices = shuffle(choices);
+        var box = $("vocabChoices");
+        box.innerHTML = "";
+        for (var k = 0; k < choices.length; k++) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "choice";
+          b.textContent = choices[k];
+          b.setAttribute("aria-label", "Choice: " + choices[k]);
+          b.onclick = (function (val) {
+            return function () { pickVocab(val, correct, q); };
+          })(choices[k]);
+          box.appendChild(b);
+        }
+      }
+
+      function pickVocab(val, correct, q) {
+        if (vocabAnswered) return;
+        vocabAnswered = true;
+        scores.vocabTotal += 1;
+        var buttons = $("vocabChoices").querySelectorAll(".choice");
+        var ok = val === correct;
+        if (ok) {
+          if (!vocabRetrying) scores.vocabFirst += 1;
+          $("vocabFeedback").className = "feedback show ok";
+          $("vocabFeedback").textContent = "Nice! You got it.";
+        } else {
+          vocabMissed.push(q.item);
+          $("vocabFeedback").className = "feedback show no";
+          $("vocabFeedback").textContent = "Almost! " + q.item.term + " = " + q.item.definition;
+        }
+        for (var i = 0; i < buttons.length; i++) {
+          buttons[i].disabled = true;
+          if (buttons[i].textContent === correct) buttons[i].classList.add("correct");
+          else if (buttons[i].textContent === val && !ok) buttons[i].classList.add("wrong");
+        }
+        setBar($("vocabBar"), (vocabIndex + 1) / vocabQueue.length);
+        $("vocabNextRow").style.display = "flex";
+      }
+
+      function nextVocab() {
+        vocabIndex += 1;
+        if (vocabIndex >= vocabQueue.length) {
+          endVocab();
+        } else {
+          renderVocab();
+        }
+      }
+      window.nextVocab = nextVocab;
+
+      function endVocab() {
+        $("vocabPlay").hidden = true;
+        $("vocabDone").hidden = false;
+        var first = scores.vocabFirst;
+        var total = vocabQueue.length;
+        $("vocabDoneTitle").textContent = first === total ? "Star scientist!" : "Nice work!";
+        $("vocabDoneText").textContent = "You got " + first + " of " + total + " on the first try.";
+        $("vocabRetryBtn").style.display = (vocabMissed.length && !vocabRetrying) ? "" : "none";
+        if (playAll) {
+          $("vocabRetryBtn").style.display = "none";
+        }
+      }
+
+      function retryMissedVocab() {
+        var unique = [];
+        var seen = {};
+        for (var i = 0; i < vocabMissed.length; i++) {
+          if (!seen[vocabMissed[i].term]) {
+            seen[vocabMissed[i].term] = true;
+            unique.push(vocabMissed[i]);
+          }
+        }
+        vocabQueue = buildVocabQueue(unique);
+        vocabIndex = 0;
+        vocabMissed = [];
+        vocabRetrying = true;
+        $("vocabPlay").hidden = false;
+        $("vocabDone").hidden = true;
+        renderVocab();
+      }
+      window.retryMissedVocab = retryMissedVocab;
+
+      function finishVocab() {
+        if (playAll) startSafety();
+        else goHome();
+      }
+      window.finishVocab = finishVocab;
+
+      /* ---------- Safety ---------- */
+      function startSafety() {
+        safetyGot = 0;
+        scores.safetyGood = 0;
+        scores.safetyBad = 0;
+        $("safetyDone").hidden = true;
+        $("safetyGrid").style.display = "grid";
+        $("safetyHint").style.display = "";
+        $("safetyFeedback").className = "feedback";
+        $("safetyFeedback").textContent = "";
+        var pool = [];
+        var i;
+        for (i = 0; i < SAFETY_REAL.length; i++) pool.push({ text: SAFETY_REAL[i], real: true });
+        for (i = 0; i < SAFETY_FAKE.length; i++) pool.push({ text: SAFETY_FAKE[i], real: false });
+        pool = shuffle(pool);
+        var grid = $("safetyGrid");
+        grid.innerHTML = "";
+        for (i = 0; i < pool.length; i++) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "rule";
+          b.textContent = pool[i].text;
+          b.setAttribute("aria-label", (pool[i].real ? "Possible real rule: " : "Possible rule: ") + pool[i].text);
+          b.onclick = (function (btn, real) {
+            return function () { pickSafety(btn, real); };
+          })(b, pool[i].real);
+          grid.appendChild(b);
+        }
+        updateSafetyProgress();
+        var all = $("safetyAll");
+        all.innerHTML = "";
+        for (i = 0; i < SAFETY_REAL.length; i++) {
+          var li = document.createElement("li");
+          li.textContent = SAFETY_REAL[i];
+          all.appendChild(li);
+        }
+        show("safety");
+      }
+      window.startSafety = startSafety;
+
+      function updateSafetyProgress() {
+        $("safetyProgress").textContent = "Find 4 real rules · " + safetyGot + " / " + safetyNeeded;
+        setBar($("safetyBar"), safetyGot / safetyNeeded);
+      }
+
+      function pickSafety(btn, real) {
+        if (safetyGot >= safetyNeeded) return;
+        if (btn.disabled) return;
+        var fb = $("safetyFeedback");
+        if (real) {
+          btn.disabled = true;
+          btn.classList.add("picked-good");
+          safetyGot += 1;
+          scores.safetyGood += 1;
+          fb.className = "feedback show ok";
+          fb.textContent = "Yes! That is a real lab rule.";
+          updateSafetyProgress();
+          if (safetyGot >= safetyNeeded) {
+            $("safetyGrid").style.display = "none";
+            $("safetyHint").style.display = "none";
+            $("safetyDone").hidden = false;
+            $("safetyDoneTitle").textContent = scores.safetyBad === 0
+              ? "You found 4 real rules — first try!"
+              : "You found 4 real rules!";
+          }
+        } else {
+          scores.safetyBad += 1;
+          btn.classList.add("picked-bad", "wiggle");
+          btn.disabled = true;
+          fb.className = "feedback show no";
+          fb.textContent = "Not a real rule. Keep looking — you can do it!";
+          setTimeout(function () { btn.classList.remove("wiggle"); }, 400);
+        }
+      }
+
+      function finishSafety() {
+        if (playAll) startMethod();
+        else goHome();
+      }
+      window.finishSafety = finishSafety;
+
+      /* ---------- Method ---------- */
+      function startMethod() {
+        methodNext = 0;
+        scores.methodFirst = 0;
+        scores.methodWrong = 0;
+        methodTriedThis = false;
+        $("methodDone").hidden = true;
+        $("methodSteps").style.display = "grid";
+        $("methodList").innerHTML = "";
+        var final = $("methodFinal");
+        final.innerHTML = "";
+        var i;
+        for (i = 0; i < METHOD.length; i++) {
+          var li = document.createElement("li");
+          li.textContent = METHOD[i];
+          final.appendChild(li);
+        }
+        var order = shuffle(METHOD);
+        var box = $("methodSteps");
+        box.innerHTML = "";
+        for (i = 0; i < order.length; i++) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "step";
+          b.textContent = order[i];
+          b.setAttribute("aria-label", "Method step: " + order[i]);
+          b.onclick = (function (btn, text) {
+            return function () { pickMethod(btn, text); };
+          })(b, order[i]);
+          box.appendChild(b);
+        }
+        updateMethodProgress();
+        show("method");
+      }
+      window.startMethod = startMethod;
+
+      function updateMethodProgress() {
+        $("methodProgress").textContent = "Step " + methodNext + " of " + METHOD.length;
+        setBar($("methodBar"), methodNext / METHOD.length);
+      }
+
+      function pickMethod(btn, text) {
+        if (methodNext >= METHOD.length) return;
+        if (btn.classList.contains("used")) return;
+        if (text === METHOD[methodNext]) {
+          if (!methodTriedThis) scores.methodFirst += 1;
+          methodTriedThis = false;
+          btn.classList.add("used");
+          btn.disabled = true;
+          var li = document.createElement("li");
+          li.textContent = text;
+          $("methodList").appendChild(li);
+          methodNext += 1;
+          updateMethodProgress();
+          if (methodNext >= METHOD.length) {
+            $("methodSteps").style.display = "none";
+            $("methodDone").hidden = false;
+          }
+        } else {
+          scores.methodWrong += 1;
+          methodTriedThis = true;
+          btn.classList.add("wiggle");
+          setTimeout(function () { btn.classList.remove("wiggle"); }, 400);
+        }
+      }
+
+      function finishMethod() {
+        if (playAll) showResults();
+        else goHome();
+      }
+      window.finishMethod = finishMethod;
+
+      /* ---------- Play all ---------- */
+      function startPlayAll() {
+        playAll = true;
+        scores = { vocabFirst: 0, vocabTotal: 0, safetyGood: 0, safetyBad: 0, methodFirst: 0, methodWrong: 0 };
+        startVocab();
+      }
+      window.startPlayAll = startPlayAll;
+
+      function showResults() {
+        var vocabPts = scores.vocabFirst;
+        var safetyPts = scores.safetyBad === 0 ? 4 : Math.max(2, 4 - scores.safetyBad);
+        var methodPts = scores.methodFirst;
+        var earned = vocabPts + safetyPts + methodPts;
+        var possible = 7 + 4 + 6;
+        var pct = earned / possible;
+        var stars = 1;
+        if (pct >= 0.9) stars = 5;
+        else if (pct >= 0.75) stars = 4;
+        else if (pct >= 0.55) stars = 3;
+        else if (pct >= 0.35) stars = 2;
+        var titles = ["You finished the quest!", "Great start!", "Nice job, scientist!", "Super work!", "Amazing scientist!", "Lab legend!"];
+        $("resultsTitle").textContent = titles[stars];
+        var starStr = "";
+        for (var i = 0; i < 5; i++) starStr += i < stars ? "⭐" : "☆";
+        $("resultsStars").textContent = starStr;
+        $("resultsStars").setAttribute("aria-label", stars + " out of 5 stars");
+        $("resultsText").textContent = "You earned " + stars + " of 5 stars. Keep practicing for Friday!";
+        $("resultsBreak").innerHTML =
+          "<li>Vocab: " + vocabPts + " of 7 first-try</li>" +
+          "<li>Lab safety: 4 real rules found" + (scores.safetyBad ? " (a few mix-ups — that’s okay!)" : " with no mix-ups") + "</li>" +
+          "<li>Scientific method: " + methodPts + " of 6 first-try</li>";
+        show("results");
+      }
+
+      window.startFlashcards = startFlashcards;
+      window.startVocab = startVocab;
+      window.startSafety = startSafety;
+      window.startMethod = startMethod;
+    })();
+  </script>
+</body>
+</html>
